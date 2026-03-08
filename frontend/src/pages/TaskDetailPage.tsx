@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Edit, Trash2, ListTodo, Calendar, Flag, AlertTriangle, CheckCircle, Clock, Play, Circle } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, ListTodo, Calendar, Flag, AlertTriangle, CheckCircle, Clock, Play, Circle, MessageCircle, Send } from 'lucide-react'
 import { useTask, useUpdateTask, useDeleteTask, useUpdateTaskStatus } from '../hooks/useTasks'
+import { useComments, useCreateComment, useDeleteComment } from '../hooks/useComments'
+import { useAuthStore } from '../stores/authStore'
 import TaskForm from '../components/TaskForm'
 import { useState } from 'react'
 
@@ -20,11 +22,17 @@ export default function TaskDetailPage() {
   const { taskId } = useParams<{ taskId: string }>()
   const navigate = useNavigate()
   const [isEditing, setIsEditing] = useState(false)
+  const [commentText, setCommentText] = useState('')
+  
+  const user = useAuthStore((s) => s.user)
 
   const { data: task, isLoading } = useTask(taskId!)
+  const { data: comments = [], isLoading: loadingComments } = useComments(taskId!)
   const updateTask = useUpdateTask()
   const deleteTask = useDeleteTask()
   const updateStatus = useUpdateTaskStatus()
+  const createComment = useCreateComment(taskId!)
+  const deleteComment = useDeleteComment(taskId!)
 
   const handleUpdate = async (data: any) => {
     await updateTask.mutateAsync({ taskId: taskId!, data })
@@ -40,6 +48,12 @@ export default function TaskDetailPage() {
 
   const handleStatusChange = async (status: string) => {
     await updateStatus.mutateAsync({ taskId: taskId!, status })
+  }
+
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return
+    await createComment.mutateAsync(commentText.trim())
+    setCommentText('')
   }
 
   if (isLoading) {
@@ -149,6 +163,74 @@ export default function TaskDetailPage() {
               <p className="text-sm text-[#636E72] whitespace-pre-wrap leading-relaxed">{task.description}</p>
             </div>
           )}
+
+          {/* 评论区域 */}
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageCircle className="text-[#FF6B6B]" size={16} />
+              <h2 className="text-sm font-semibold text-[#2D3436]">评论</h2>
+              <span className="text-xs text-[#636E72]">({comments.length})</span>
+            </div>
+
+            {/* 评论输入 */}
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                placeholder="写下你的评论..."
+                className="input flex-1"
+              />
+              <button
+                onClick={handleAddComment}
+                disabled={!commentText.trim() || createComment.isPending}
+                className="btn-primary flex items-center gap-1"
+              >
+                <Send size={14} />
+              </button>
+            </div>
+
+            {/* 评论列表 */}
+            {loadingComments ? (
+              <div className="text-center py-4 text-[#636E72] text-sm">加载评论...</div>
+            ) : comments.length === 0 ? (
+              <div className="text-center py-6 text-[#B2BEC3] text-sm">
+                暂无评论，来说点什么吧~
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="p-3 bg-[#FFF8F0] rounded-lg">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-primary flex items-center justify-center text-white text-xs font-bold">
+                          {comment.user_id === user?.id ? (user?.nickname?.[0] || user?.email[0].toUpperCase()) : '?'}
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#636E72]">
+                            {comment.user_id === user?.id ? (user?.nickname || '我') : '用户'}
+                          </p>
+                          <p className="text-xs text-[#B2BEC3]">
+                            {new Date(comment.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                      {comment.user_id === user?.id && (
+                        <button
+                          onClick={() => deleteComment.mutate(comment.id)}
+                          className="p-1 text-[#636E72] hover:text-[#FF6B6B] rounded transition-colors"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-sm text-[#2D3436] mt-2">{comment.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* 元信息 */}
           <div className="card p-4">

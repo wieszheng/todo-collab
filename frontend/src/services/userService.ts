@@ -1,19 +1,37 @@
-import { axiosInstance } from './api'
-import { User } from '../types'
+import axios from 'axios'
 
-export const userApi = {
-  list: async (): Promise<User[]> => {
-    const response = await axiosInstance.get('/users')
+const API_URL = 'http://localhost:8000/api/v1'
+
+const getAuthHeaders = () => ({
+  Authorization: `Bearer ${localStorage.getItem('token')}`,
+})
+
+export const userService = {
+  async updateMe(data: { nickname?: string; avatar_url?: string }) {
+    const response = await axios.put(`${API_URL}/users/me`, data, {
+      headers: getAuthHeaders(),
+    })
     return response.data
   },
 
-  get: async (userId: string): Promise<User> => {
-    const response = await axiosInstance.get(`/users/${userId}`)
+  async getMe() {
+    const response = await axios.get(`${API_URL}/users/me`, {
+      headers: getAuthHeaders(),
+    })
     return response.data
   },
 
-  updateProfile: async (data: { nickname?: string; avatar_url?: string }): Promise<User> => {
-    const response = await axiosInstance.put('/users/me', data)
+  async list() {
+    const response = await axios.get(`${API_URL}/users/`, {
+      headers: getAuthHeaders(),
+    })
+    return response.data
+  },
+
+  async getById(id: string) {
+    const response = await axios.get(`${API_URL}/users/${id}`, {
+      headers: getAuthHeaders(),
+    })
     return response.data
   },
 }

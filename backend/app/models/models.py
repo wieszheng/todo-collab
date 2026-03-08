@@ -68,3 +68,17 @@ class Notification(Base):
     is_read = Column(Boolean, default=False)
     related_task_id = Column(String(36), ForeignKey("tasks.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    content = Column(Text, nullable=False)
+    task_id = Column(String(36), ForeignKey("tasks.id"), nullable=False)
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # 关系
+    task = relationship("Task", backref="comments")
+    user = relationship("User", backref="comments")

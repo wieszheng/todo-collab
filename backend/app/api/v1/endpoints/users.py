@@ -8,7 +8,7 @@ from sqlalchemy import select
 from app.core.database import get_db
 from app.api.deps import get_current_user
 from app.models.models import User
-from app.schemas.user import UserResponse
+from app.schemas.user import UserResponse, UserUpdate
 
 router = APIRouter()
 
@@ -18,6 +18,23 @@ async def get_me(
     current_user: User = Depends(get_current_user)
 ):
     """获取当前用户信息"""
+    return current_user
+
+
+@router.put("/me", response_model=UserResponse)
+async def update_me(
+    data: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """更新当前用户信息"""
+    if data.nickname is not None:
+        current_user.nickname = data.nickname
+    if data.avatar_url is not None:
+        current_user.avatar_url = data.avatar_url
+    
+    await db.commit()
+    await db.refresh(current_user)
     return current_user
 
 

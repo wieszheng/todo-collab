@@ -1,16 +1,27 @@
 import { useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
-import { Settings, User, Bell, Palette, Mail } from 'lucide-react'
+import { useUpdateUser } from '../hooks/useUsers'
+import { Settings, User, Bell, Palette, Mail, Save } from 'lucide-react'
 
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user)
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'appearance'>('profile')
+  const [nickname, setNickname] = useState(user?.nickname || '')
+  const [saved, setSaved] = useState(false)
+  
+  const updateUser = useUpdateUser()
 
   const tabs = [
     { id: 'profile', label: '个人信息', icon: User },
     { id: 'notifications', label: '通知设置', icon: Bell },
     { id: 'appearance', label: '外观设置', icon: Palette },
   ] as const
+
+  const handleSave = async () => {
+    await updateUser.mutateAsync({ nickname })
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-4 animate-in p-1">
@@ -84,14 +95,20 @@ export default function ProfilePage() {
                   </label>
                   <input
                     type="text"
-                    value={user?.nickname || ''}
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
                     placeholder="设置一个昵称"
                     className="input"
                   />
                 </div>
 
-                <button className="btn-primary">
-                  保存修改
+                <button 
+                  onClick={handleSave}
+                  disabled={updateUser.isPending}
+                  className="btn-primary flex items-center gap-1.5"
+                >
+                  <Save size={14} />
+                  {updateUser.isPending ? '保存中...' : saved ? '已保存!' : '保存修改'}
                 </button>
               </div>
             </div>
