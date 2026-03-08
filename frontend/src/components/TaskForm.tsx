@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { TaskCreate } from '../types'
+import { X } from 'lucide-react'
 
 interface TaskFormProps {
   initialData?: Partial<TaskCreate>
@@ -30,80 +31,91 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
   return (
     <form onSubmit={handleSubmit} className="p-6">
-      <h2 className="text-xl font-bold mb-6">{isEdit ? '编辑任务' : '新建任务'}</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gradient flex items-center gap-2">
+          {isEdit ? '✏️ 编辑任务' : '✨ 新建任务'}
+        </h2>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-warm-100 rounded-lg transition-colors"
+        >
+          <X size={20} />
+        </button>
+      </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            任务标题 *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            📝 任务标题 *
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
+            className="input"
             placeholder="输入任务标题"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            任务描述
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            💭 任务描述
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
+            className="input resize-none"
             placeholder="描述任务详情（可选）"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              优先级
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              🎯 优先级
             </label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
+              className="input"
             >
-              <option value="low">低</option>
-              <option value="medium">中</option>
-              <option value="high">高</option>
+              <option value="low">💤 低优先级</option>
+              <option value="medium">📌 中优先级</option>
+              <option value="high">⚡ 高优先级</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              截止日期
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              📅 截止日期
             </label>
             <input
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
+              className="input"
             />
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+          className="btn-secondary"
         >
           取消
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50"
+          className="btn-primary"
         >
-          {isLoading ? '保存中...' : isEdit ? '保存修改' : '创建任务'}
+          {isLoading ? '保存中... ⏳' : isEdit ? '保存修改 ✓' : '创建任务 ✨'}
         </button>
       </div>
     </form>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { authApi } from '../services/authService'
+import { Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -32,66 +33,83 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Todo Collab</h2>
-          <p className="mt-2 text-gray-600">待办事项协作平台</p>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{
+      background: 'linear-gradient(135deg, #fff5f7 0%, #f5f3ff 50%, #fff5f7 100%)'
+    }}>
+      {/* 装饰性背景 */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-primary-300 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent-300 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-primary-200 rounded-full opacity-10 blur-3xl"></div>
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-primary shadow-glow mb-4">
+            <Sparkles className="text-white" size={32} />
+          </div>
+          <h2 className="text-3xl font-bold text-gradient">Todo Collab</h2>
+          <p className="text-gray-500 mt-2">待办事项协作平台 ✨</p>
         </div>
-        
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                邮箱
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="your@email.com"
-              />
-            </div>
+
+        {/* 登录卡片 */}
+        <div className="card p-8 animate-in">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {error && (
+              <div className="bg-danger-light text-danger-dark p-4 rounded-xl text-sm flex items-center gap-2">
+                <span>❌</span>
+                {error}
+              </div>
+            )}
             
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                密码
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="••••••••"
-              />
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  📧 邮箱
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="input"
+                  placeholder="your@email.com"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  🔐 密码
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="input"
+                  placeholder="••••••••"
+                />
+              </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 px-4 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
-          >
-            {loading ? '登录中...' : '登录'}
-          </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3 text-base"
+            >
+              {loading ? '登录中... ⏳' : '登录 ✨'}
+            </button>
 
-          <div className="text-center text-sm">
-            <span className="text-gray-600">还没有账号？</span>
-            {' '}
-            <Link to="/register" className="text-primary hover:underline">
-              立即注册
-            </Link>
-          </div>
-        </form>
+            <div className="text-center text-sm pt-2">
+              <span className="text-gray-500">还没有账号？</span>
+              {' '}
+              <Link to="/register" className="text-primary-500 hover:text-primary-600 font-medium">
+                立即注册 💖
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

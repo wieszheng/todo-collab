@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Plus, Filter } from 'lucide-react'
-import { useTasks } from '../hooks/useTasks'
-import { useCreateTask } from '../hooks/useTasks'
+import { Plus, Filter, Sparkles } from 'lucide-react'
+import { useTasks, useCreateTask } from '../hooks/useTasks'
 import TaskCard from '../components/TaskCard'
 import TaskForm from '../components/TaskForm'
 
@@ -26,16 +25,19 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in">
       {/* 头部 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">任务列表</h1>
-          <p className="text-gray-600 mt-1">管理你的所有任务</p>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Sparkles className="text-primary-400" size={28} />
+            任务列表
+          </h1>
+          <p className="text-gray-500 mt-1">管理你的所有任务 ✨</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+          className="btn-primary flex items-center gap-2"
         >
           <Plus size={20} />
           新建任务
@@ -43,57 +45,73 @@ export default function TasksPage() {
       </div>
 
       {/* 筛选器 */}
-      <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <Filter size={20} className="text-gray-400" />
+      <div className="card p-4 flex items-center gap-6">
+        <div className="flex items-center gap-2 text-gray-400">
+          <Filter size={20} />
+        </div>
         
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">状态:</span>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary"
-          >
-            <option value="all">全部</option>
-            <option value="todo">待办</option>
-            <option value="in_progress">进行中</option>
-            <option value="done">已完成</option>
-          </select>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">状态:</span>
+          <div className="flex gap-2">
+            {(['all', 'todo', 'in_progress', 'done'] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setStatusFilter(s)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  statusFilter === s
+                    ? 'bg-gradient-primary text-white shadow-glow'
+                    : 'bg-warm-100 text-gray-600 hover:bg-warm-200'
+                }`}
+              >
+                {s === 'all' ? '全部' : s === 'todo' ? '📋 待办' : s === 'in_progress' ? '⏳ 进行中' : '✓ 已完成'}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">优先级:</span>
-          <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as PriorityFilter)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary"
-          >
-            <option value="all">全部</option>
-            <option value="high">高</option>
-            <option value="medium">中</option>
-            <option value="low">低</option>
-          </select>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">优先级:</span>
+          <div className="flex gap-2">
+            {(['all', 'high', 'medium', 'low'] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPriorityFilter(p)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  priorityFilter === p
+                    ? 'bg-gradient-primary text-white shadow-glow'
+                    : 'bg-warm-100 text-gray-600 hover:bg-warm-200'
+                }`}
+              >
+                {p === 'all' ? '全部' : p === 'high' ? '⚡ 高' : p === 'medium' ? '📌 中' : '💤 低'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* 任务列表 */}
       {isLoading ? (
-        <div className="text-center py-12 text-gray-500">加载中...</div>
+        <div className="text-center py-12 text-gray-400">加载中... ⏳</div>
       ) : tasks.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          暂无任务，点击"新建任务"创建第一个吧！
+        <div className="card p-12 text-center">
+          <div className="text-5xl mb-4">📝</div>
+          <p className="text-gray-400">暂无任务</p>
+          <p className="text-gray-400 text-sm mt-1">点击"新建任务"创建第一个吧！</p>
         </div>
       ) : (
         <div className="grid gap-4">
-          {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+          {tasks.map((task, index) => (
+            <div key={task.id} style={{ animationDelay: `${index * 50}ms` }} className="animate-in">
+              <TaskCard task={task} />
+            </div>
           ))}
         </div>
       )}
 
       {/* 新建任务弹窗 */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="card w-full max-w-lg animate-in">
             <TaskForm
               onSubmit={handleCreateTask}
               onCancel={() => setShowForm(false)}
