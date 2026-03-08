@@ -252,6 +252,22 @@
     background-clip: text;
   }
   
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+  }
+  
+  .bg-gradient-soft {
+    background: linear-gradient(135deg, #FFF8F0 0%, #FFE8E8 100%);
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.25);
+  }
+  
+  .shadow-glow-mint {
+    box-shadow: 0 4px 20px rgba(78, 205, 196, 0.25);
+  }
+  
   .bg-glass {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
