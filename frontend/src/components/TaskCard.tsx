@@ -7,15 +7,15 @@ interface TaskCardProps {
 }
 
 const statusConfig = {
-  todo: { bg: 'bg-warm-100', text: 'text-gray-600', label: '📋 待办' },
-  in_progress: { bg: 'bg-accent-100', text: 'text-accent-600', label: '⏳ 进行中' },
-  done: { bg: 'bg-success-light', text: 'text-success-dark', label: '✓ 已完成' },
+  todo: { bg: 'bg-[#FFF5F5]', text: 'text-[#E85555]', label: '📋 待办' },
+  in_progress: { bg: 'bg-[#E0F7F5]', text: 'text-[#3AB8B0]', label: '⏳ 进行中' },
+  done: { bg: 'bg-[#E0F7F5]', text: 'text-[#3AB8B0]', label: '✓ 已完成' },
 }
 
 const priorityConfig = {
-  low: { bg: 'bg-gray-100', text: 'text-gray-500', label: '💤 低' },
-  medium: { bg: 'bg-warning-light', text: 'text-warning-dark', label: '📌 中' },
-  high: { bg: 'bg-danger-light', text: 'text-danger-dark', label: '⚡ 高' },
+  low: { bg: 'bg-[#F5F5F5]', text: 'text-[#636E72]', label: '💤 低' },
+  medium: { bg: 'bg-[#FFF3E0]', text: 'text-[#E88860]', label: '📌 中' },
+  high: { bg: 'bg-[#FFE8E8]', text: 'text-[#E85555]', label: '⚡ 高' },
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
@@ -41,13 +41,13 @@ export default function TaskCard({ task }: TaskCardProps) {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <h3 className="font-semibold text-gray-800 group-hover:text-primary-500 transition-colors">
+            <h3 className="font-semibold text-[#2D3436] group-hover:text-[#FF6B6B] transition-colors">
               {task.title}
             </h3>
           </div>
           
           {task.description && (
-            <p className="text-sm text-gray-500 line-clamp-2 mb-3">{task.description}</p>
+            <p className="text-sm text-[#636E72] line-clamp-2 mb-3">{task.description}</p>
           )}
           
           <div className="flex items-center gap-2 flex-wrap">
@@ -58,7 +58,7 @@ export default function TaskCard({ task }: TaskCardProps) {
               {priority.label}
             </span>
             {task.due_date && (
-              <span className="text-xs text-gray-400 flex items-center gap-1">
+              <span className="text-xs text-[#636E72] flex items-center gap-1">
                 📅 {new Date(task.due_date).toLocaleDateString()}
               </span>
             )}
@@ -76,7 +76,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           )}
           <button
             onClick={handleDelete}
-            className="btn-ghost text-xs py-1.5 px-3 text-danger hover:bg-danger-light"
+            className="btn-ghost text-xs py-1.5 px-3 text-[#FF6B6B] hover:bg-[#FFF5F5]"
           >
             删除 🗑️
           </button>

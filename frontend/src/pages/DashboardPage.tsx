@@ -43,48 +43,48 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="card p-5 hover:shadow-glow group">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-gray-100 group-hover:bg-primary-100 transition-colors">
-              <CheckSquare className="text-gray-600 group-hover:text-primary-500 transition-colors" size={24} />
+            <div className="p-3 rounded-xl bg-[#FFF5F5] group-hover:bg-[#FFE8E8] transition-colors">
+              <CheckSquare className="text-[#FF6B6B]" size={24} />
             </div>
             <div>
               <p className="text-3xl font-bold text-gradient">{todoCount}</p>
-              <p className="text-gray-500 text-sm">待办任务</p>
+              <p className="text-[#636E72] text-sm">待办任务</p>
             </div>
           </div>
         </div>
 
-        <div className="card p-5 hover:shadow-glow-accent group">
+        <div className="card p-5 hover:shadow-glow-mint group">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-blue-50 group-hover:bg-accent-100 transition-colors">
-              <Clock className="text-blue-500 group-hover:text-accent-500 transition-colors" size={24} />
+            <div className="p-3 rounded-xl bg-[#E0F7F5] group-hover:bg-[#D0F0EC] transition-colors">
+              <Clock className="text-[#4ECDC4]" size={24} />
             </div>
             <div>
-              <p className="text-3xl font-bold text-gradient">{inProgressCount}</p>
-              <p className="text-gray-500 text-sm">进行中</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card p-5 group">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-green-50 group-hover:bg-green-100 transition-colors">
-              <TrendingUp className="text-green-500 transition-colors" size={24} />
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-green-500">{doneCount}</p>
-              <p className="text-gray-500 text-sm">已完成 ✨</p>
+              <p className="text-3xl font-bold text-[#4ECDC4]">{inProgressCount}</p>
+              <p className="text-[#636E72] text-sm">进行中</p>
             </div>
           </div>
         </div>
 
         <div className="card p-5 group">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-red-50 group-hover:bg-red-100 transition-colors">
-              <AlertCircle className="text-red-500 transition-colors" size={24} />
+            <div className="p-3 rounded-xl bg-[#E0F7F5] group-hover:bg-[#D0F0EC] transition-colors">
+              <TrendingUp className="text-[#4ECDC4]" size={24} />
             </div>
             <div>
-              <p className="text-3xl font-bold text-red-400">{highPriorityCount}</p>
-              <p className="text-gray-500 text-sm">高优先级 ⚡</p>
+              <p className="text-3xl font-bold text-[#4ECDC4]">{doneCount}</p>
+              <p className="text-[#636E72] text-sm">已完成 ✨</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="card p-5 group">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-[#FFF3E0] group-hover:bg-[#FFE8D0] transition-colors">
+              <AlertCircle className="text-[#FFA07A]" size={24} />
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-[#FFA07A]">{highPriorityCount}</p>
+              <p className="text-[#636E72] text-sm">高优先级 ⚡</p>
             </div>
           </div>
         </div>
@@ -92,38 +92,38 @@ export default function DashboardPage() {
 
       {/* 最近任务 */}
       <div className="card">
-        <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+        <div className="p-5 border-b border-[#E8E8E8] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="text-primary-400" size={20} />
-            <h2 className="text-lg font-semibold">最近任务</h2>
+            <Sparkles className="text-[#FF6B6B]" size={20} />
+            <h2 className="text-lg font-semibold text-[#2D3436]">最近任务</h2>
           </div>
-          <a href="/tasks" className="text-sm text-primary-500 hover:text-primary-600">查看全部 →</a>
+          <a href="/tasks" className="text-sm text-[#FF6B6B] hover:text-[#E85555]">查看全部 →</a>
         </div>
         <div className="p-5">
           {isLoading ? (
-            <div className="text-center py-8 text-gray-400">加载中... ⏳</div>
+            <div className="text-center py-8 text-[#636E72]">加载中... ⏳</div>
           ) : tasks.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-4xl mb-3">📝</div>
-              <p className="text-gray-400">暂无任务，创建一个吧！</p>
+              <p className="text-[#636E72]">暂无任务，创建一个吧！</p>
             </div>
           ) : (
             <div className="space-y-3">
               {tasks.slice(0, 5).map((task, index) => (
                 <div
                   key={task.id}
-                  className="flex items-center justify-between p-4 bg-warm-100 rounded-xl hover:bg-warm-200 transition-colors"
+                  className="flex items-center justify-between p-4 bg-[#FFF8F0] rounded-xl hover:bg-[#FFF5F5] transition-colors"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div>
-                    <h3 className="font-medium text-gray-800">{task.title}</h3>
-                    <p className="text-sm text-gray-400 mt-0.5">
+                    <h3 className="font-medium text-[#2D3436]">{task.title}</h3>
+                    <p className="text-sm text-[#636E72] mt-0.5">
                       {task.due_date ? `截止: ${new Date(task.due_date).toLocaleDateString()}` : '无截止日期'}
                     </p>
                   </div>
                   <span className={`tag ${
                     task.status === 'done' ? 'tag-success' :
-                    task.status === 'in_progress' ? 'tag-accent' :
+                    task.status === 'in_progress' ? 'tag-mint' :
                     'tag-primary'
                   }`}>
                     {task.status === 'done' ? '✓ 已完成' : task.status === 'in_progress' ? '⏳ 进行中' : '📋 待办'}

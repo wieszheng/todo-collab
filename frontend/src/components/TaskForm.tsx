@@ -38,7 +38,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         <button
           type="button"
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-warm-100 rounded-lg transition-colors"
+          className="p-2 text-[#636E72] hover:text-[#2D3436] hover:bg-[#F5F5F5] rounded-lg transition-colors"
         >
           <X size={20} />
         </button>
@@ -46,7 +46,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
       <div className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[#2D3436] mb-2">
             📝 任务标题 *
           </label>
           <input
@@ -60,7 +60,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[#2D3436] mb-2">
             💭 任务描述
           </label>
           <textarea
@@ -74,7 +74,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[#2D3436] mb-2">
               🎯 优先级
             </label>
             <select
@@ -89,7 +89,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[#2D3436] mb-2">
               📅 截止日期
             </label>
             <input
@@ -102,7 +102,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
+      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-[#E8E8E8]">
         <button
           type="button"
           onClick={onCancel}

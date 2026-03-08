@@ -7,98 +7,68 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 温暖可爱的主色调
+        // 主色调
         primary: {
-          50: '#fff5f7',
-          100: '#ffe0e8',
-          200: '#ffc6d7',
-          300: '#ff9fba',
-          400: '#ff6b9d',
-          500: '#ff4785',  // 主色 - 珊瑚粉
-          600: '#e6306c',
-          700: '#c41f55',
-          800: '#a31848',
-          900: '#88143e',
+          DEFAULT: '#FF6B6B',  // 珊瑚橙
+          light: '#FF8585',
+          dark: '#E85555',
+          50: '#FFF5F5',
+          100: '#FFE8E8',
+          200: '#FFD4D4',
+          300: '#FFB4A2',  // 桃子粉
+          400: '#FFA07A',  // 暖阳橙
+          500: '#FF6B6B',
+          600: '#E85555',
+          700: '#CC4444',
         },
-        // 科技感辅助色
-        accent: {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',  // 科技紫
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
+        // 辅助色
+        secondary: {
+          mint: '#4ECDC4',    // 薄荷绿
+          lavender: '#A8DADC', // 薰衣草
+          cream: '#FFF8F0',   // 奶油白
         },
-        // 温暖中性色
-        warm: {
-          50: '#fefefe',
-          100: '#fdf8f6',
-          200: '#f9f0eb',
-          300: '#f3e5dc',
-          400: '#e8d5c4',
-          500: '#d4bba3',
+        // 中性色
+        neutral: {
+          charcoal: '#2D3436',  // 深炭灰
+          warm: '#636E72',      // 暖灰
+          light: '#B2BEC3',     // 浅灰
+          cream: '#FAFAFA',     // 米白
         },
         // 状态色
         success: {
-          light: '#d1fae5',
-          DEFAULT: '#34d399',
-          dark: '#059669',
+          light: '#E0F7F5',
+          DEFAULT: '#4ECDC4',
+          dark: '#3AB8B0',
         },
         warning: {
-          light: '#fef3c7',
-          DEFAULT: '#fbbf24',
-          dark: '#d97706',
+          light: '#FFF3E0',
+          DEFAULT: '#FFA07A',
+          dark: '#E88860',
         },
         danger: {
-          light: '#fee2e2',
-          DEFAULT: '#f87171',
-          dark: '#dc2626',
+          light: '#FFE8E8',
+          DEFAULT: '#FF6B6B',
+          dark: '#E85555',
         },
       },
       fontFamily: {
         sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-        display: ['Inter', 'PingFang SC', 'sans-serif'],
       },
       borderRadius: {
         'xl': '1rem',
         '2xl': '1.5rem',
         '3xl': '2rem',
-        '4xl': '3rem',
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'glow': '0 0 20px rgba(255, 71, 133, 0.3)',
-        'glow-accent': '0 0 20px rgba(139, 92, 246, 0.3)',
-        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
+        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.05), 0 10px 20px -2px rgba(0, 0, 0, 0.03)',
+        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
+        'glow': '0 4px 20px rgba(255, 107, 107, 0.25)',
+        'glow-mint': '0 4px 20px rgba(78, 205, 196, 0.25)',
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #ff4785 0%, #8b5cf6 100%)',
-        'gradient-soft': 'linear-gradient(135deg, #fff5f7 0%, #f5f3ff 100%)',
-        'gradient-card': 'linear-gradient(180deg, #ffffff 0%, #fdf8f6 100%)',
-      },
-      animation: {
-        'float': 'float 3s ease-in-out infinite',
-        'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
-        'bounce-soft': 'bounce-soft 2s ease-in-out infinite',
-      },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        'pulse-soft': {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.7 },
-        },
-        'bounce-soft': {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-5px)' },
-        },
+        'gradient-primary': 'linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%)',
+        'gradient-soft': 'linear-gradient(135deg, #FFF8F0 0%, #FFE8E8 100%)',
       },
     },
   },
