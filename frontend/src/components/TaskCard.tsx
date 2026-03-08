@@ -1,7 +1,7 @@
 import { Task } from '../types'
 import { useUpdateTaskStatus, useDeleteTask } from '../hooks/useTasks'
 import { useNavigate } from 'react-router-dom'
-import { Clock, CheckCircle, Circle, AlertTriangle, Flag, Calendar, Play, Trash2 } from 'lucide-react'
+import { CheckCircle, Circle, AlertTriangle, Flag, Calendar, Play, Trash2 } from 'lucide-react'
 
 interface TaskCardProps {
   task: Task
@@ -55,59 +55,59 @@ export default function TaskCard({ task }: TaskCardProps) {
   const PriorityIcon = priority.icon
 
   return (
-    <div className="card p-5 group cursor-pointer" onClick={() => navigate(`/tasks/${task.id}`)}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h3 className="font-semibold text-[#2D3436] group-hover:text-[#FF6B6B] transition-colors">
+    <div className="card p-3 group cursor-pointer" onClick={() => navigate(`/tasks/${task.id}`)}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="font-medium text-sm text-[#2D3436] group-hover:text-[#FF6B6B] transition-colors truncate">
               {task.title}
             </h3>
           </div>
           
           {task.description && (
-            <p className="text-sm text-[#636E72] line-clamp-2 mb-3">{task.description}</p>
+            <p className="text-xs text-[#636E72] line-clamp-1 mb-2">{task.description}</p>
           )}
           
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className={`tag ${status.bg} ${status.text} flex items-center gap-1`}>
-              <StatusIcon size={14} />
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className={`tag ${status.bg} ${status.text} flex items-center gap-0.5`}>
+              <StatusIcon size={12} />
               {status.label}
             </span>
-            <span className={`tag ${priority.bg} ${priority.text} flex items-center gap-1`}>
-              <PriorityIcon size={14} />
+            <span className={`tag ${priority.bg} ${priority.text} flex items-center gap-0.5`}>
+              <PriorityIcon size={12} />
               {priority.label}
             </span>
             {task.due_date && (
-              <span className="text-xs text-[#636E72] flex items-center gap-1">
-                <Calendar size={12} />
+              <span className="text-xs text-[#636E72] flex items-center gap-0.5">
+                <Calendar size={10} />
                 {new Date(task.due_date).toLocaleDateString()}
               </span>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 ml-4" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
           {task.status !== 'done' && (
             <button
               onClick={() => handleStatusChange(task.status === 'todo' ? 'in_progress' : 'done')}
-              className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1"
+              className="btn-primary text-xs py-1 px-2 flex items-center gap-1"
             >
               {task.status === 'todo' ? (
                 <>
-                  <Play size={14} /> 开始
+                  <Play size={12} /> 开始
                 </>
               ) : (
                 <>
-                  <CheckCircle size={14} /> 完成
+                  <CheckCircle size={12} /> 完成
                 </>
               )}
             </button>
           )}
           <button
             onClick={handleDelete}
-            className="btn-ghost text-xs py-1.5 px-3 text-[#FF6B6B] hover:bg-[#FFF5F5] flex items-center gap-1"
+            className="btn-ghost text-xs py-1 px-2 text-[#FF6B6B] hover:bg-[#FFF5F5] flex items-center gap-1"
           >
-            <Trash2 size={14} /> 删除
+            <Trash2 size={12} />
           </button>
         </div>
       </div>

@@ -11,12 +11,6 @@ interface TaskFormProps {
   isEdit?: boolean
 }
 
-const priorityOptions = [
-  { value: 'low', label: '低优先级', icon: Flag, color: 'text-[#636E72]' },
-  { value: 'medium', label: '中优先级', icon: Flag, color: 'text-[#FFA07A]' },
-  { value: 'high', label: '高优先级', icon: AlertCircle, color: 'text-[#FF6B6B]' },
-]
-
 export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, isEdit }: TaskFormProps) {
   const [title, setTitle] = useState(initialData?.title || '')
   const [description, setDescription] = useState(initialData?.description || '')
@@ -41,24 +35,24 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gradient flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-base font-bold text-gradient flex items-center gap-1.5">
           {isEdit ? '编辑任务' : '新建任务'}
         </h2>
         <button
           type="button"
           onClick={onCancel}
-          className="p-2 text-[#636E72] hover:text-[#2D3436] hover:bg-[#F5F5F5] rounded-lg transition-colors"
+          className="p-1.5 text-[#636E72] hover:text-[#2D3436] hover:bg-[#F5F5F5] rounded-lg transition-colors"
         >
-          <X size={20} />
+          <X size={16} />
         </button>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-[#2D3436] mb-2">
-            <FileText size={16} className="inline mr-1" />
+          <label className="block text-xs font-medium text-[#2D3436] mb-1">
+            <FileText size={14} className="inline mr-1" />
             任务标题 *
           </label>
           <input
@@ -72,22 +66,22 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[#2D3436] mb-2">
+          <label className="block text-xs font-medium text-[#2D3436] mb-1">
             任务描述
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={3}
+            rows={2}
             className="input resize-none"
             placeholder="描述任务详情（可选）"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-[#2D3436] mb-2">
-              <Flag size={16} className="inline mr-1" />
+            <label className="block text-xs font-medium text-[#2D3436] mb-1">
+              <Flag size={14} className="inline mr-1" />
               优先级
             </label>
             <select
@@ -102,8 +96,8 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#2D3436] mb-2">
-              <Calendar size={16} className="inline mr-1" />
+            <label className="block text-xs font-medium text-[#2D3436] mb-1">
+              <Calendar size={14} className="inline mr-1" />
               截止日期
             </label>
             <input
@@ -117,8 +111,8 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
         {/* 分配给 */}
         <div>
-          <label className="block text-sm font-medium text-[#2D3436] mb-2">
-            <UserPlus size={16} className="inline mr-1" />
+          <label className="block text-xs font-medium text-[#2D3436] mb-1">
+            <UserPlus size={14} className="inline mr-1" />
             分配给
           </label>
           <select
@@ -133,11 +127,11 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
               </option>
             ))}
           </select>
-          <p className="text-xs text-[#636E72] mt-1">分配后，该成员会收到通知</p>
+          <p className="text-xs text-[#636E72] mt-0.5">分配后，该成员会收到通知</p>
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-[#E8E8E8]">
+      <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-[#E8E8E8]">
         <button
           type="button"
           onClick={onCancel}

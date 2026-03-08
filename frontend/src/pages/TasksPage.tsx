@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { Plus, Filter, ListTodo, CheckCircle, Clock, Flag, AlertTriangle } from 'lucide-react'
 import { useTasks, useCreateTask } from '../hooks/useTasks'
 import TaskCard from '../components/TaskCard'
 import TaskForm from '../components/TaskForm'
+import { useState } from 'react'
 
 type StatusFilter = 'all' | 'todo' | 'in_progress' | 'done'
 type PriorityFilter = 'all' | 'low' | 'medium' | 'high'
@@ -39,47 +39,47 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 animate-in p-1">
       {/* 头部 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2D3436] flex items-center gap-2">
-            <ListTodo className="text-[#FF6B6B]" size={28} />
+          <h1 className="text-xl font-bold text-[#2D3436] flex items-center gap-2">
+            <ListTodo className="text-[#FF6B6B]" size={22} />
             任务列表
           </h1>
-          <p className="text-[#636E72] mt-1">管理你的所有任务</p>
+          <p className="text-[#636E72] text-sm mt-0.5">管理你的所有任务</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center gap-1.5"
         >
-          <Plus size={20} />
+          <Plus size={16} />
           新建任务
         </button>
       </div>
 
       {/* 筛选器 */}
-      <div className="card p-4 flex items-center gap-6 flex-wrap">
+      <div className="card p-3 flex items-center gap-4 flex-wrap">
         <div className="flex items-center gap-2 text-[#636E72]">
-          <Filter size={20} />
+          <Filter size={16} />
         </div>
         
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-[#636E72]">状态:</span>
-          <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[#636E72]">状态:</span>
+          <div className="flex gap-1">
             {statusOptions.map((s) => {
               const Icon = s.icon
               return (
                 <button
                   key={s.value}
                   onClick={() => setStatusFilter(s.value)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-2 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
                     statusFilter === s.value
                       ? 'bg-gradient-primary text-white shadow-glow'
                       : 'bg-[#F5F5F5] text-[#636E72] hover:bg-[#FFF5F5]'
                   }`}
                 >
-                  <Icon size={14} />
+                  <Icon size={12} />
                   {s.label}
                 </button>
               )
@@ -87,22 +87,22 @@ export default function TasksPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-[#636E72]">优先级:</span>
-          <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[#636E72]">优先级:</span>
+          <div className="flex gap-1">
             {priorityOptions.map((p) => {
               const Icon = p.icon
               return (
                 <button
                   key={p.value}
                   onClick={() => setPriorityFilter(p.value)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-2 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
                     priorityFilter === p.value
                       ? 'bg-gradient-primary text-white shadow-glow'
                       : 'bg-[#F5F5F5] text-[#636E72] hover:bg-[#FFF5F5]'
                   }`}
                 >
-                  {Icon && <Icon size={14} />}
+                  {Icon && <Icon size={12} />}
                   {p.label}
                 </button>
               )
@@ -113,17 +113,17 @@ export default function TasksPage() {
 
       {/* 任务列表 */}
       {isLoading ? (
-        <div className="text-center py-12 text-[#636E72]">加载中...</div>
+        <div className="text-center py-8 text-[#636E72] text-sm">加载中...</div>
       ) : tasks.length === 0 ? (
-        <div className="card p-12 text-center">
-          <ListTodo className="mx-auto text-[#B2BEC3]" size={64} />
-          <p className="text-[#636E72] mt-4">暂无任务</p>
-          <p className="text-[#B2BEC3] text-sm mt-1">点击"新建任务"创建第一个吧！</p>
+        <div className="card p-8 text-center">
+          <ListTodo className="mx-auto text-[#B2BEC3]" size={40} />
+          <p className="text-[#636E72] mt-2 text-sm">暂无任务</p>
+          <p className="text-[#B2BEC3] text-xs mt-1">点击"新建任务"创建第一个吧</p>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {tasks.map((task, index) => (
-            <div key={task.id} style={{ animationDelay: `${index * 50}ms` }} className="animate-in">
+            <div key={task.id} style={{ animationDelay: `${index * 30}ms` }} className="animate-in">
               <TaskCard task={task} />
             </div>
           ))}
@@ -133,7 +133,7 @@ export default function TasksPage() {
       {/* 新建任务弹窗 */}
       {showForm && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="card w-full max-w-lg animate-in">
+          <div className="card w-full max-w-md animate-in">
             <TaskForm
               onSubmit={handleCreateTask}
               onCancel={() => setShowForm(false)}

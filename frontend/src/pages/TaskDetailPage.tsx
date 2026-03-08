@@ -43,11 +43,11 @@ export default function TaskDetailPage() {
   }
 
   if (isLoading) {
-    return <div className="text-center py-12 text-[#636E72]">加载中...</div>
+    return <div className="text-center py-8 text-[#636E72] text-sm">加载中...</div>
   }
 
   if (!task) {
-    return <div className="text-center py-12 text-[#636E72]">任务不存在</div>
+    return <div className="text-center py-8 text-[#636E72] text-sm">任务不存在</div>
   }
 
   const status = statusConfig[task.status]
@@ -56,13 +56,13 @@ export default function TaskDetailPage() {
   const PriorityIcon = priority.icon
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in">
+    <div className="max-w-2xl mx-auto space-y-4 animate-in p-1">
       {/* 返回按钮 */}
       <button
         onClick={() => navigate('/tasks')}
-        className="flex items-center gap-2 text-[#636E72] hover:text-[#FF6B6B] transition-colors"
+        className="flex items-center gap-1.5 text-[#636E72] hover:text-[#FF6B6B] transition-colors text-sm"
       >
-        <ArrowLeft size={20} />
+        <ArrowLeft size={16} />
         返回任务列表
       </button>
 
@@ -79,40 +79,40 @@ export default function TaskDetailPage() {
       ) : (
         <>
           {/* 头部 */}
-          <div className="card p-6">
-            <div className="flex items-start justify-between mb-4">
-              <h1 className="text-2xl font-bold text-[#2D3436] flex items-center gap-2">
-                <ListTodo className="text-[#FF6B6B]" size={28} />
+          <div className="card p-4">
+            <div className="flex items-start justify-between mb-3">
+              <h1 className="text-lg font-bold text-[#2D3436] flex items-center gap-2">
+                <ListTodo className="text-[#FF6B6B]" size={22} />
                 {task.title}
               </h1>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="p-2 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFF5F5] rounded-lg transition-colors"
+                  className="p-1.5 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFF5F5] rounded-lg transition-colors"
                 >
-                  <Edit size={20} />
+                  <Edit size={16} />
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="p-2 text-[#FF6B6B] hover:bg-[#FFE8E8] rounded-lg transition-colors"
+                  className="p-1.5 text-[#FF6B6B] hover:bg-[#FFE8E8] rounded-lg transition-colors"
                 >
-                  <Trash2 size={20} />
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 mb-4 flex-wrap">
-              <span className={`tag ${status.bg} ${status.text} flex items-center gap-1`}>
-                <StatusIcon size={14} />
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
+              <span className={`tag ${status.bg} ${status.text} flex items-center gap-0.5`}>
+                <StatusIcon size={12} />
                 {status.label}
               </span>
-              <span className={`tag ${priority.bg} ${priority.text} flex items-center gap-1`}>
-                <PriorityIcon size={14} />
+              <span className={`tag ${priority.bg} ${priority.text} flex items-center gap-0.5`}>
+                <PriorityIcon size={12} />
                 {priority.label}
               </span>
               {task.due_date && (
-                <span className="text-sm text-[#636E72] flex items-center gap-1">
-                  <Calendar size={14} />
+                <span className="text-xs text-[#636E72] flex items-center gap-0.5">
+                  <Calendar size={12} />
                   截止: {new Date(task.due_date).toLocaleDateString()}
                 </span>
               )}
@@ -120,7 +120,7 @@ export default function TaskDetailPage() {
 
             {/* 状态切换 */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-[#636E72]">切换状态:</span>
+              <span className="text-xs text-[#636E72]">切换状态:</span>
               {(['todo', 'in_progress', 'done'] as const).map((s) => {
                 const config = statusConfig[s]
                 const Icon = config.icon
@@ -128,13 +128,13 @@ export default function TaskDetailPage() {
                   <button
                     key={s}
                     onClick={() => handleStatusChange(s)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+                    className={`px-2 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
                       task.status === s
                         ? 'bg-gradient-primary text-white shadow-glow'
                         : 'bg-[#F5F5F5] text-[#636E72] hover:bg-[#FFF5F5]'
                     }`}
                   >
-                    <Icon size={14} />
+                    <Icon size={12} />
                     {config.label}
                   </button>
                 )
@@ -144,23 +144,23 @@ export default function TaskDetailPage() {
 
           {/* 描述 */}
           {task.description && (
-            <div className="card p-6">
-              <h2 className="text-lg font-semibold text-[#2D3436] mb-3">任务描述</h2>
-              <p className="text-[#636E72] whitespace-pre-wrap leading-relaxed">{task.description}</p>
+            <div className="card p-4">
+              <h2 className="text-sm font-semibold text-[#2D3436] mb-2">任务描述</h2>
+              <p className="text-sm text-[#636E72] whitespace-pre-wrap leading-relaxed">{task.description}</p>
             </div>
           )}
 
           {/* 元信息 */}
-          <div className="card p-6">
-            <h2 className="text-lg font-semibold text-[#2D3436] mb-3">其他信息</h2>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="p-3 bg-[#FFF8F0] rounded-lg">
+          <div className="card p-4">
+            <h2 className="text-sm font-semibold text-[#2D3436] mb-2">其他信息</h2>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-2.5 bg-[#FFF8F0] rounded-lg">
                 <span className="text-[#636E72]">创建时间:</span>
-                <p className="text-[#2D3436] font-medium mt-1">{new Date(task.created_at).toLocaleString()}</p>
+                <p className="text-[#2D3436] font-medium mt-0.5">{new Date(task.created_at).toLocaleString()}</p>
               </div>
-              <div className="p-3 bg-[#FFF8F0] rounded-lg">
+              <div className="p-2.5 bg-[#FFF8F0] rounded-lg">
                 <span className="text-[#636E72]">更新时间:</span>
-                <p className="text-[#2D3436] font-medium mt-1">{new Date(task.updated_at).toLocaleString()}</p>
+                <p className="text-[#2D3436] font-medium mt-0.5">{new Date(task.updated_at).toLocaleString()}</p>
               </div>
             </div>
           </div>

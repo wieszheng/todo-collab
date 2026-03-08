@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Bell, X, Check, Trash2, CheckCheck, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
 import { useNotifications, useMarkAsRead, useMarkAllAsRead, useDeleteNotification } from '../hooks/useNotifications'
 
@@ -35,14 +34,14 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
   }
 
   return (
-    <div className="absolute right-0 top-12 w-96 card p-0 z-50 animate-in shadow-lg">
+    <div className="absolute right-0 top-10 w-80 card p-0 z-50 animate-in shadow-lg">
       {/* 头部 */}
-      <div className="flex items-center justify-between p-4 border-b border-[#E8E8E8]">
-        <div className="flex items-center gap-2">
-          <Bell className="text-[#FF6B6B]" size={20} />
-          <h3 className="font-semibold text-[#2D3436]">通知</h3>
+      <div className="flex items-center justify-between p-3 border-b border-[#E8E8E8]">
+        <div className="flex items-center gap-1.5">
+          <Bell className="text-[#FF6B6B]" size={16} />
+          <h3 className="font-semibold text-sm text-[#2D3436]">通知</h3>
           {unreadCount > 0 && (
-            <span className="px-2 py-0.5 text-xs bg-[#FF6B6B] text-white rounded-full">
+            <span className="px-1.5 py-0.5 text-xs bg-[#FF6B6B] text-white rounded-full">
               {unreadCount}
             </span>
           )}
@@ -51,9 +50,9 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllAsRead}
-              className="text-xs text-[#FF6B6B] hover:underline flex items-center gap-1"
+              className="text-xs text-[#FF6B6B] hover:underline flex items-center gap-0.5"
             >
-              <CheckCheck size={14} />
+              <CheckCheck size={12} />
               全部已读
             </button>
           )}
@@ -61,19 +60,19 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
             onClick={onClose}
             className="p-1 text-[#636E72] hover:text-[#2D3436] rounded-lg"
           >
-            <X size={18} />
+            <X size={14} />
           </button>
         </div>
       </div>
 
       {/* 通知列表 */}
-      <div className="max-h-96 overflow-y-auto">
+      <div className="max-h-72 overflow-y-auto">
         {isLoading ? (
-          <div className="p-8 text-center text-[#636E72]">加载中...</div>
+          <div className="p-6 text-center text-[#636E72] text-sm">加载中...</div>
         ) : notifications.length === 0 ? (
-          <div className="p-8 text-center">
-            <Bell className="mx-auto text-[#B2BEC3]" size={48} />
-            <p className="text-[#636E72] mt-4">暂无通知</p>
+          <div className="p-6 text-center">
+            <Bell className="mx-auto text-[#B2BEC3]" size={32} />
+            <p className="text-[#636E72] mt-2 text-sm">暂无通知</p>
           </div>
         ) : (
           <div className="divide-y divide-[#E8E8E8]">
@@ -84,43 +83,43 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
               return (
                 <div
                   key={notification.id}
-                  className={`p-4 hover:bg-[#FFF8F0] transition-colors ${
+                  className={`p-3 hover:bg-[#FFF8F0] transition-colors ${
                     !notification.is_read ? 'bg-[#FFF5F5]' : ''
                   }`}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg ${config.bg}`}>
-                      <Icon className={config.color} size={18} />
+                  <div className="flex items-start gap-2">
+                    <div className={`p-1.5 rounded-lg ${config.bg} shrink-0`}>
+                      <Icon className={config.color} size={14} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`font-medium ${!notification.is_read ? 'text-[#2D3436]' : 'text-[#636E72]'}`}>
+                      <p className={`font-medium text-sm ${!notification.is_read ? 'text-[#2D3436]' : 'text-[#636E72]'}`}>
                         {notification.title}
                       </p>
                       {notification.content && (
-                        <p className="text-sm text-[#636E72] mt-1 line-clamp-2">
+                        <p className="text-xs text-[#636E72] mt-0.5 line-clamp-2">
                           {notification.content}
                         </p>
                       )}
-                      <p className="text-xs text-[#B2BEC3] mt-2">
+                      <p className="text-xs text-[#B2BEC3] mt-1">
                         {new Date(notification.created_at).toLocaleString()}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5 shrink-0">
                       {!notification.is_read && (
                         <button
                           onClick={() => handleMarkAsRead(notification.id)}
-                          className="p-1.5 text-[#4ECDC4] hover:bg-[#E0F7F5] rounded-lg"
+                          className="p-1 text-[#4ECDC4] hover:bg-[#E0F7F5] rounded-lg"
                           title="标记已读"
                         >
-                          <Check size={16} />
+                          <Check size={12} />
                         </button>
                       )}
                       <button
                         onClick={() => handleDelete(notification.id)}
-                        className="p-1.5 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFE8E8] rounded-lg"
+                        className="p-1 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFE8E8] rounded-lg"
                         title="删除"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={12} />
                       </button>
                     </div>
                   </div>

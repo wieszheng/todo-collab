@@ -36,35 +36,35 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#FFF8F0]">
       {/* 装饰性背景 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-[#FFB4A2] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#A8DADC] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[#FF6B6B] rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute top-16 left-16 w-48 h-48 bg-[#FFB4A2] rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute bottom-16 right-16 w-64 h-64 bg-[#A8DADC] rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-[#FF6B6B] rounded-full opacity-10 blur-3xl"></div>
       </div>
 
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-sm">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-primary shadow-glow mb-4">
-            <Sparkles className="text-white" size={32} />
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-primary shadow-glow mb-3">
+            <Sparkles className="text-white" size={24} />
           </div>
-          <h2 className="text-3xl font-bold text-gradient">Todo Collab</h2>
-          <p className="text-[#636E72] mt-2">待办事项协作平台</p>
+          <h2 className="text-2xl font-bold text-gradient">Todo Collab</h2>
+          <p className="text-[#636E72] text-sm mt-1">待办事项协作平台</p>
         </div>
 
         {/* 登录卡片 */}
-        <div className="card p-8 animate-in">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="card p-5 animate-in">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-[#FFE8E8] text-[#E85555] p-4 rounded-xl text-sm flex items-center gap-2">
+              <div className="bg-[#FFE8E8] text-[#E85555] p-3 rounded-lg text-xs flex items-center gap-1.5">
                 <span>!</span>
                 {error}
               </div>
             )}
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  <Mail size={16} className="inline mr-1" />
+                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                  <Mail size={14} className="inline mr-1" />
                   邮箱
                 </label>
                 <input
@@ -78,8 +78,8 @@ export default function LoginPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  <Lock size={16} className="inline mr-1" />
+                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                  <Lock size={14} className="inline mr-1" />
                   密码
                 </label>
                 <input
@@ -96,12 +96,12 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-3 text-base"
+              className="btn-primary w-full py-2"
             >
               {loading ? '登录中...' : '登录'}
             </button>
 
-            <div className="text-center text-sm pt-2">
+            <div className="text-center text-xs pt-1">
               <span className="text-[#636E72]">还没有账号？</span>
               {' '}
               <Link to="/register" className="text-[#FF6B6B] hover:text-[#E85555] font-medium">

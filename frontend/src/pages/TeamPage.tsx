@@ -15,60 +15,60 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 animate-in p-1">
       {/* 头部 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2D3436] flex items-center gap-2">
-            <Users className="text-[#FF6B6B]" size={28} />
+          <h1 className="text-xl font-bold text-[#2D3436] flex items-center gap-2">
+            <Users className="text-[#FF6B6B]" size={22} />
             团队管理
           </h1>
-          <p className="text-[#636E72] mt-1">管理你的团队成员</p>
+          <p className="text-[#636E72] text-sm mt-0.5">管理你的团队成员</p>
         </div>
-        <button className="btn-primary flex items-center gap-2">
-          <UserPlus size={20} />
+        <button className="btn-primary flex items-center gap-1.5">
+          <UserPlus size={16} />
           邀请成员
         </button>
       </div>
 
       {/* 团队统计 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card p-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-[#FFF5F5]">
-              <Users className="text-[#FF6B6B]" size={24} />
+      <div className="grid grid-cols-3 gap-3">
+        <div className="card p-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#FFF5F5]">
+              <Users className="text-[#FF6B6B]" size={18} />
             </div>
             <div>
-              <p className="text-3xl font-bold text-gradient">{members.length}</p>
-              <p className="text-[#636E72] text-sm">团队成员</p>
+              <p className="text-xl font-bold text-gradient">{members.length}</p>
+              <p className="text-[#636E72] text-xs">团队成员</p>
             </div>
           </div>
         </div>
 
-        <div className="card p-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-[#E0F7F5]">
-              <Shield className="text-[#4ECDC4]" size={24} />
+        <div className="card p-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#E0F7F5]">
+              <Shield className="text-[#4ECDC4]" size={18} />
             </div>
             <div>
-              <p className="text-3xl font-bold text-[#4ECDC4]">
+              <p className="text-xl font-bold text-[#4ECDC4]">
                 {members.filter(m => m.role === 'admin').length}
               </p>
-              <p className="text-[#636E72] text-sm">管理员</p>
+              <p className="text-[#636E72] text-xs">管理员</p>
             </div>
           </div>
         </div>
 
-        <div className="card p-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-[#FFF3E0]">
-              <Crown className="text-[#FFA07A]" size={24} />
+        <div className="card p-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#FFF3E0]">
+              <Crown className="text-[#FFA07A]" size={18} />
             </div>
             <div>
-              <p className="text-3xl font-bold text-[#FFA07A]">
+              <p className="text-xl font-bold text-[#FFA07A]">
                 {members.filter(m => m.role === 'owner').length}
               </p>
-              <p className="text-[#636E72] text-sm">创建者</p>
+              <p className="text-[#636E72] text-xs">创建者</p>
             </div>
           </div>
         </div>
@@ -76,8 +76,8 @@ export default function TeamPage() {
 
       {/* 成员列表 */}
       <div className="card">
-        <div className="p-5 border-b border-[#E8E8E8]">
-          <h2 className="text-lg font-semibold text-[#2D3436]">成员列表</h2>
+        <div className="p-3 border-b border-[#E8E8E8]">
+          <h2 className="text-sm font-semibold text-[#2D3436]">成员列表</h2>
         </div>
         <div className="divide-y divide-[#E8E8E8]">
           {members.map((member) => {
@@ -85,22 +85,22 @@ export default function TeamPage() {
             const RoleIcon = role.icon
             
             return (
-              <div key={member.id} className="p-4 flex items-center justify-between hover:bg-[#FFF8F0] transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center text-white font-bold shadow-glow">
+              <div key={member.id} className="p-3 flex items-center justify-between hover:bg-[#FFF8F0] transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center text-white text-sm font-bold shadow-glow">
                     {member.avatar}
                   </div>
                   <div>
-                    <p className="font-medium text-[#2D3436]">{member.name}</p>
-                    <p className="text-sm text-[#636E72]">{member.email}</p>
+                    <p className="font-medium text-sm text-[#2D3436]">{member.name}</p>
+                    <p className="text-xs text-[#636E72]">{member.email}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className={`tag ${role.bg} ${role.color} flex items-center gap-1`}>
-                    <RoleIcon size={14} />
+                <div className="flex items-center gap-2">
+                  <span className={`tag ${role.bg} ${role.color} flex items-center gap-0.5`}>
+                    <RoleIcon size={12} />
                     {role.label}
                   </span>
-                  <button className="btn-ghost text-sm">
+                  <button className="btn-ghost text-xs">
                     管理
                   </button>
                 </div>
@@ -112,10 +112,10 @@ export default function TeamPage() {
 
       {/* 空状态提示 */}
       {members.length === 0 && (
-        <div className="card p-12 text-center">
-          <Users className="mx-auto text-[#B2BEC3]" size={64} />
-          <p className="text-[#636E72] mt-4">暂无团队成员</p>
-          <p className="text-[#B2BEC3] text-sm mt-1">点击"邀请成员"添加第一位成员</p>
+        <div className="card p-8 text-center">
+          <Users className="mx-auto text-[#B2BEC3]" size={40} />
+          <p className="text-[#636E72] mt-2 text-sm">暂无团队成员</p>
+          <p className="text-[#B2BEC3] text-xs mt-1">点击"邀请成员"添加第一位成员</p>
         </div>
       )}
     </div>
