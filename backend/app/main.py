@@ -3,11 +3,23 @@ Todo Collab - 待办事项协作平台
 FastAPI 后端服务
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import api_router
 from app.core.config import settings
+from app.core.database import init_db
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用生命周期管理"""
+    # 启动时初始化数据库
+    await init_db()
+    yield
+    # 关闭时清理资源
+
 
 app = FastAPI(
     title="Todo Collab API",
@@ -15,6 +27,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # CORS 配置
