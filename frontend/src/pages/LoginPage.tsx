@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { authApi } from '../services/authService'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Mail, Lock } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -56,7 +56,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-[#FFE8E8] text-[#E85555] p-4 rounded-xl text-sm flex items-center gap-2">
-                <span>⚠️</span>
+                <span>!</span>
                 {error}
               </div>
             )}
@@ -64,7 +64,8 @@ export default function LoginPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  📧 邮箱
+                  <Mail size={16} className="inline mr-1" />
+                  邮箱
                 </label>
                 <input
                   type="email"
@@ -78,7 +79,8 @@ export default function LoginPage() {
               
               <div>
                 <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  🔐 密码
+                  <Lock size={16} className="inline mr-1" />
+                  密码
                 </label>
                 <input
                   type="password"
@@ -96,7 +98,7 @@ export default function LoginPage() {
               disabled={loading}
               className="btn-primary w-full py-3 text-base"
             >
-              {loading ? '登录中... ⏳' : '登录 ✨'}
+              {loading ? '登录中...' : '登录'}
             </button>
 
             <div className="text-center text-sm pt-2">

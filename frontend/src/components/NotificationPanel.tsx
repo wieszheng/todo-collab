@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, X, Check, Trash2, CheckCheck } from 'lucide-react'
+import { Bell, X, Check, Trash2, CheckCheck, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
 import { useNotifications, useMarkAsRead, useMarkAllAsRead, useDeleteNotification } from '../hooks/useNotifications'
 
 interface NotificationPanelProps {
@@ -7,9 +7,9 @@ interface NotificationPanelProps {
 }
 
 const typeConfig = {
-  task_assigned: { icon: '📝', color: 'text-[#FF6B6B]' },
-  task_updated: { icon: '📌', color: 'text-[#4ECDC4]' },
-  task_due: { icon: '⏰', color: 'text-[#FFA07A]' },
+  task_assigned: { icon: CheckCircle, color: 'text-[#FF6B6B]', bg: 'bg-[#FFF5F5]' },
+  task_updated: { icon: Clock, color: 'text-[#4ECDC4]', bg: 'bg-[#E0F7F5]' },
+  task_due: { icon: AlertTriangle, color: 'text-[#FFA07A]', bg: 'bg-[#FFF3E0]' },
 }
 
 export default function NotificationPanel({ onClose }: NotificationPanelProps) {
@@ -69,16 +69,17 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
       {/* 通知列表 */}
       <div className="max-h-96 overflow-y-auto">
         {isLoading ? (
-          <div className="p-8 text-center text-[#636E72]">加载中... ⏳</div>
+          <div className="p-8 text-center text-[#636E72]">加载中...</div>
         ) : notifications.length === 0 ? (
           <div className="p-8 text-center">
-            <div className="text-4xl mb-2">🔔</div>
-            <p className="text-[#636E72]">暂无通知</p>
+            <Bell className="mx-auto text-[#B2BEC3]" size={48} />
+            <p className="text-[#636E72] mt-4">暂无通知</p>
           </div>
         ) : (
           <div className="divide-y divide-[#E8E8E8]">
             {notifications.map((notification) => {
-              const config = typeConfig[notification.type] || { icon: '🔔', color: 'text-[#636E72]' }
+              const config = typeConfig[notification.type] || { icon: Bell, color: 'text-[#636E72]', bg: 'bg-[#F5F5F5]' }
+              const Icon = config.icon
               
               return (
                 <div
@@ -88,7 +89,9 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-xl">{config.icon}</span>
+                    <div className={`p-2 rounded-lg ${config.bg}`}>
+                      <Icon className={config.color} size={18} />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className={`font-medium ${!notification.is_read ? 'text-[#2D3436]' : 'text-[#636E72]'}`}>
                         {notification.title}

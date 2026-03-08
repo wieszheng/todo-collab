@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { Home, CheckSquare, Users, Settings, Sparkles } from 'lucide-react'
+import { Home, CheckSquare, Users, Settings, Sparkles, ListTodo } from 'lucide-react'
 
 const navItems = [
-  { to: '/', icon: Home, label: '首页', emoji: '🏠' },
-  { to: '/tasks', icon: CheckSquare, label: '任务', emoji: '✨' },
-  { to: '/team', icon: Users, label: '团队', emoji: '👥' },
-  { to: '/profile', icon: Settings, label: '设置', emoji: '⚙️' },
+  { to: '/', icon: Home, label: '首页' },
+  { to: '/tasks', icon: ListTodo, label: '任务' },
+  { to: '/team', icon: Users, label: '团队' },
+  { to: '/profile', icon: Settings, label: '设置' },
 ]
 
 export default function Sidebar() {
@@ -26,7 +26,7 @@ export default function Sidebar() {
       
       {/* 导航菜单 */}
       <nav className="flex-1 p-4 space-y-2">
-        {navItems.map(({ to, icon: Icon, label, emoji }) => (
+        {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
@@ -43,8 +43,8 @@ export default function Sidebar() {
       {/* 底部统计卡片 */}
       <div className="p-4">
         <div className="card p-4 text-center" style={{ background: 'linear-gradient(135deg, #FFF5F5 0%, #FFF8F0 100%)' }}>
-          <div className="text-2xl mb-2">🌸</div>
-          <p className="text-sm text-[#636E72]">今日待办</p>
+          <ListTodo className="mx-auto text-[#FF6B6B]" size={32} />
+          <p className="text-sm text-[#636E72] mt-2">今日待办</p>
           <p className="text-2xl font-bold text-gradient">3 项</p>
         </div>
       </div>

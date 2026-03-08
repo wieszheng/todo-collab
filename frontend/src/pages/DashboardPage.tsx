@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { CheckSquare, Clock, AlertCircle, TrendingUp, Sparkles } from 'lucide-react'
+import { CheckSquare, Clock, AlertCircle, TrendingUp, ListTodo, Calendar, Sun, Moon } from 'lucide-react'
 import { taskApi } from '../services/taskService'
 import { useAuthStore } from '../stores/authStore'
 
@@ -18,10 +18,12 @@ export default function DashboardPage() {
 
   const greeting = () => {
     const hour = new Date().getHours()
-    if (hour < 12) return '早上好 ☀️'
-    if (hour < 18) return '下午好 🌤️'
-    return '晚上好 🌙'
+    if (hour < 12) return { text: '早上好', icon: Sun }
+    if (hour < 18) return { text: '下午好', icon: Sun }
+    return { text: '晚上好', icon: Moon }
   }
+
+  const GreetingIcon = greeting().icon
 
   return (
     <div className="space-y-6 animate-in">
@@ -31,11 +33,13 @@ export default function DashboardPage() {
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
         
         <div className="relative">
-          <p className="text-white/80 text-sm">{greeting()}</p>
+          <p className="text-white/80 text-sm flex items-center gap-1">
+            <GreetingIcon size={16} /> {greeting().text}
+          </p>
           <h1 className="text-2xl font-bold mt-1">
             {user?.nickname || '用户'}，今天想做点什么？
           </h1>
-          <p className="text-white/70 mt-2">让我们一起完成今天的任务吧！✨</p>
+          <p className="text-white/70 mt-2">让我们一起完成今天的任务吧！</p>
         </div>
       </div>
 
@@ -72,7 +76,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-3xl font-bold text-[#4ECDC4]">{doneCount}</p>
-              <p className="text-[#636E72] text-sm">已完成 ✨</p>
+              <p className="text-[#636E72] text-sm">已完成</p>
             </div>
           </div>
         </div>
@@ -84,7 +88,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-3xl font-bold text-[#FFA07A]">{highPriorityCount}</p>
-              <p className="text-[#636E72] text-sm">高优先级 ⚡</p>
+              <p className="text-[#636E72] text-sm">高优先级</p>
             </div>
           </div>
         </div>
@@ -94,18 +98,18 @@ export default function DashboardPage() {
       <div className="card">
         <div className="p-5 border-b border-[#E8E8E8] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="text-[#FF6B6B]" size={20} />
+            <ListTodo className="text-[#FF6B6B]" size={20} />
             <h2 className="text-lg font-semibold text-[#2D3436]">最近任务</h2>
           </div>
           <a href="/tasks" className="text-sm text-[#FF6B6B] hover:text-[#E85555]">查看全部 →</a>
         </div>
         <div className="p-5">
           {isLoading ? (
-            <div className="text-center py-8 text-[#636E72]">加载中... ⏳</div>
+            <div className="text-center py-8 text-[#636E72]">加载中...</div>
           ) : tasks.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-4xl mb-3">📝</div>
-              <p className="text-[#636E72]">暂无任务，创建一个吧！</p>
+              <ListTodo className="mx-auto text-[#B2BEC3]" size={48} />
+              <p className="text-[#636E72] mt-4">暂无任务，创建一个吧！</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -117,8 +121,13 @@ export default function DashboardPage() {
                 >
                   <div>
                     <h3 className="font-medium text-[#2D3436]">{task.title}</h3>
-                    <p className="text-sm text-[#636E72] mt-0.5">
-                      {task.due_date ? `截止: ${new Date(task.due_date).toLocaleDateString()}` : '无截止日期'}
+                    <p className="text-sm text-[#636E72] mt-0.5 flex items-center gap-1">
+                      {task.due_date ? (
+                        <>
+                          <Calendar size={12} />
+                          截止: {new Date(task.due_date).toLocaleDateString()}
+                        </>
+                      ) : '无截止日期'}
                     </p>
                   </div>
                   <span className={`tag ${
@@ -126,7 +135,7 @@ export default function DashboardPage() {
                     task.status === 'in_progress' ? 'tag-mint' :
                     'tag-primary'
                   }`}>
-                    {task.status === 'done' ? '✓ 已完成' : task.status === 'in_progress' ? '⏳ 进行中' : '📋 待办'}
+                    {task.status === 'done' ? '已完成' : task.status === 'in_progress' ? '进行中' : '待办'}
                   </span>
                 </div>
               ))}

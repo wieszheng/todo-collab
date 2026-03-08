@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { authApi } from '../services/authService'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Mail, Lock, User } from 'lucide-react'
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('')
@@ -49,7 +49,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-[#FFE8E8] text-[#E85555] p-4 rounded-xl text-sm flex items-center gap-2">
-                <span>⚠️</span>
+                <span>!</span>
                 {error}
               </div>
             )}
@@ -57,7 +57,8 @@ export default function RegisterPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  📧 邮箱 *
+                  <Mail size={16} className="inline mr-1" />
+                  邮箱 *
                 </label>
                 <input
                   type="email"
@@ -71,7 +72,8 @@ export default function RegisterPage() {
               
               <div>
                 <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  💭 昵称
+                  <User size={16} className="inline mr-1" />
+                  昵称
                 </label>
                 <input
                   type="text"
@@ -84,7 +86,8 @@ export default function RegisterPage() {
 
               <div>
                 <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                  🔐 密码 *
+                  <Lock size={16} className="inline mr-1" />
+                  密码 *
                 </label>
                 <input
                   type="password"
@@ -103,7 +106,7 @@ export default function RegisterPage() {
               disabled={loading}
               className="btn-primary w-full py-3 text-base"
             >
-              {loading ? '注册中... ⏳' : '注册 ✨'}
+              {loading ? '注册中...' : '注册'}
             </button>
 
             <div className="text-center text-sm pt-2">

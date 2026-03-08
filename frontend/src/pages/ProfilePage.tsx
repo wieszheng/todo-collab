@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
-import { Settings, User, Bell, Shield, Palette } from 'lucide-react'
+import { Settings, User, Bell, Palette, Mail, Shield, Palette as ThemeIcon } from 'lucide-react'
 
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user)
@@ -9,7 +9,7 @@ export default function ProfilePage() {
   const tabs = [
     { id: 'profile', label: '个人信息', icon: User },
     { id: 'notifications', label: '通知设置', icon: Bell },
-    { id: 'appearance', label: '外观设置', icon: Palette },
+    { id: 'appearance', label: '外观设置', icon: ThemeIcon },
   ] as const
 
   return (
@@ -65,7 +65,8 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                    📧 邮箱
+                    <Mail size={16} className="inline mr-1" />
+                    邮箱
                   </label>
                   <input
                     type="email"
@@ -78,7 +79,8 @@ export default function ProfilePage() {
 
                 <div>
                   <label className="block text-sm font-medium text-[#2D3436] mb-2">
-                    💭 昵称
+                    <User size={16} className="inline mr-1" />
+                    昵称
                   </label>
                   <input
                     type="text"
@@ -89,7 +91,7 @@ export default function ProfilePage() {
                 </div>
 
                 <button className="btn-primary">
-                  保存修改 ✨
+                  保存修改
                 </button>
               </div>
             </div>
@@ -145,14 +147,14 @@ export default function ProfilePage() {
                 <div>
                   <p className="font-medium text-[#2D3436] mb-3">界面模式</p>
                   <div className="flex gap-3">
-                    <button className="px-4 py-2 rounded-xl bg-gradient-primary text-white shadow-glow">
-                      ☀️ 浅色
+                    <button className="px-4 py-2 rounded-xl bg-gradient-primary text-white shadow-glow flex items-center gap-1.5">
+                      <Settings size={16} /> 浅色
                     </button>
-                    <button className="px-4 py-2 rounded-xl bg-[#F5F5F5] text-[#636E72] hover:bg-[#E8E8E8]">
-                      🌙 深色
+                    <button className="px-4 py-2 rounded-xl bg-[#F5F5F5] text-[#636E72] hover:bg-[#E8E8E8] flex items-center gap-1.5">
+                      <Settings size={16} /> 深色
                     </button>
-                    <button className="px-4 py-2 rounded-xl bg-[#F5F5F5] text-[#636E72] hover:bg-[#E8E8E8]">
-                      💻 跟随系统
+                    <button className="px-4 py-2 rounded-xl bg-[#F5F5F5] text-[#636E72] hover:bg-[#E8E8E8] flex items-center gap-1.5">
+                      <Settings size={16} /> 跟随系统
                     </button>
                   </div>
                 </div>

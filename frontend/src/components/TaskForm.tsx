@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TaskCreate } from '../types'
-import { X, UserPlus } from 'lucide-react'
+import { X, UserPlus, Flag, Calendar, AlertCircle, FileText } from 'lucide-react'
 import { useUsers } from '../hooks/useUsers'
 
 interface TaskFormProps {
@@ -10,6 +10,12 @@ interface TaskFormProps {
   isLoading?: boolean
   isEdit?: boolean
 }
+
+const priorityOptions = [
+  { value: 'low', label: '低优先级', icon: Flag, color: 'text-[#636E72]' },
+  { value: 'medium', label: '中优先级', icon: Flag, color: 'text-[#FFA07A]' },
+  { value: 'high', label: '高优先级', icon: AlertCircle, color: 'text-[#FF6B6B]' },
+]
 
 export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, isEdit }: TaskFormProps) {
   const [title, setTitle] = useState(initialData?.title || '')
@@ -38,7 +44,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
     <form onSubmit={handleSubmit} className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-gradient flex items-center gap-2">
-          {isEdit ? '✏️ 编辑任务' : '✨ 新建任务'}
+          {isEdit ? '编辑任务' : '新建任务'}
         </h2>
         <button
           type="button"
@@ -52,7 +58,8 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
       <div className="space-y-5">
         <div>
           <label className="block text-sm font-medium text-[#2D3436] mb-2">
-            📝 任务标题 *
+            <FileText size={16} className="inline mr-1" />
+            任务标题 *
           </label>
           <input
             type="text"
@@ -66,7 +73,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
         <div>
           <label className="block text-sm font-medium text-[#2D3436] mb-2">
-            💭 任务描述
+            任务描述
           </label>
           <textarea
             value={description}
@@ -80,22 +87,24 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-[#2D3436] mb-2">
-              🎯 优先级
+              <Flag size={16} className="inline mr-1" />
+              优先级
             </label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
               className="input"
             >
-              <option value="low">💤 低优先级</option>
-              <option value="medium">📌 中优先级</option>
-              <option value="high">⚡ 高优先级</option>
+              <option value="low">低优先级</option>
+              <option value="medium">中优先级</option>
+              <option value="high">高优先级</option>
             </select>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[#2D3436] mb-2">
-              📅 截止日期
+              <Calendar size={16} className="inline mr-1" />
+              截止日期
             </label>
             <input
               type="date"
@@ -141,7 +150,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
           disabled={isLoading}
           className="btn-primary"
         >
-          {isLoading ? '保存中... ⏳' : isEdit ? '保存修改 ✓' : '创建任务 ✨'}
+          {isLoading ? '保存中...' : isEdit ? '保存修改' : '创建任务'}
         </button>
       </div>
     </form>

@@ -1,4 +1,4 @@
-import { Users, UserPlus, Shield, Crown } from 'lucide-react'
+import { Users, UserPlus, Shield, Crown, ListTodo } from 'lucide-react'
 
 export default function TeamPage() {
   // 模拟团队成员数据
@@ -113,8 +113,8 @@ export default function TeamPage() {
       {/* 空状态提示 */}
       {members.length === 0 && (
         <div className="card p-12 text-center">
-          <div className="text-5xl mb-4">👥</div>
-          <p className="text-[#636E72]">暂无团队成员</p>
+          <Users className="mx-auto text-[#B2BEC3]" size={64} />
+          <p className="text-[#636E72] mt-4">暂无团队成员</p>
           <p className="text-[#B2BEC3] text-sm mt-1">点击"邀请成员"添加第一位成员</p>
         </div>
       )}
