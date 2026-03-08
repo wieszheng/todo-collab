@@ -68,3 +68,16 @@ export const useUpdateTaskStatus = () => {
     },
   })
 }
+
+export const useAssignTask = () => {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: ({ taskId, assigneeId }: { taskId: string; assigneeId: string }) =>
+      taskApi.assign(taskId, assigneeId),
+    onSuccess: (_, { taskId }) => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+    },
+  })
+}

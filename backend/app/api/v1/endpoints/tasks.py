@@ -10,6 +10,7 @@ from app.schemas.user import TaskCreate, TaskUpdate, TaskResponse
 from app.models.models import Task
 from app.api.deps import get_current_user
 from app.models.models import User
+from app.services.notification_service import notify_task_assigned
 
 router = APIRouter()
 
@@ -156,8 +157,28 @@ async def assign_task(
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
+    # 检查是否有权限分配（创建者才能分配）
+    if task.creator_id != current_user.id:
+        raise HTTPException(status_code=403, detail="只有任务创建者可以分配任务")
+    
+    # 检查被分配用户是否存在
+    result = await db.execute(select(User).where(User.id == assignee_id))
+    assignee = result.scalar_one_or_none()
+    if not assignee:
+        raise HTTPException(status_code=404, detail="被分配用户不存在")
+    
     task.assignee_id = assignee_id
     await db.commit()
     await db.refresh(task)
+    
+    # 发送通知给被分配的用户
+    if assignee_id != current_user.id:
+        await notify_task_assigned(
+            db=db,
+            assignee_id=assignee_id,
+            task_title=task.title,
+            task_id=task.id,
+            assigner_name=current_user.nickname or current_user.email
+        )
     
     return task

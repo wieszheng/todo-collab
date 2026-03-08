@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { TaskCreate } from '../types'
-import { X } from 'lucide-react'
+import { X, UserPlus } from 'lucide-react'
+import { useUsers } from '../hooks/useUsers'
 
 interface TaskFormProps {
   initialData?: Partial<TaskCreate>
@@ -17,6 +18,9 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
   const [dueDate, setDueDate] = useState(
     initialData?.due_date ? new Date(initialData.due_date).toISOString().split('T')[0] : ''
   )
+  const [assigneeId, setAssigneeId] = useState(initialData?.assignee_id || '')
+
+  const { data: users = [] } = useUsers()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,6 +30,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
       description: description || undefined,
       priority,
       due_date: dueDate ? new Date(dueDate).toISOString() : undefined,
+      assignee_id: assigneeId || undefined,
     })
   }
 
@@ -99,6 +104,27 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
               className="input"
             />
           </div>
+        </div>
+
+        {/* 分配给 */}
+        <div>
+          <label className="block text-sm font-medium text-[#2D3436] mb-2">
+            <UserPlus size={16} className="inline mr-1" />
+            分配给
+          </label>
+          <select
+            value={assigneeId}
+            onChange={(e) => setAssigneeId(e.target.value)}
+            className="input"
+          >
+            <option value="">不分配</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.nickname || user.email}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-[#636E72] mt-1">分配后，该成员会收到通知</p>
         </div>
       </div>
 

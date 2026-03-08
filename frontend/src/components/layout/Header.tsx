@@ -1,11 +1,18 @@
+import { useState } from 'react'
 import { LogOut, Bell, Search } from 'lucide-react'
 import { useAuthStore } from '../../stores/authStore'
+import { useUnreadCount } from '../../hooks/useNotifications'
+import NotificationPanel from '../NotificationPanel'
 
 export default function Header() {
   const { user, logout } = useAuthStore()
+  const { data: unreadData } = useUnreadCount()
+  const [showNotifications, setShowNotifications] = useState(false)
+
+  const unreadCount = unreadData?.count || 0
 
   return (
-    <header className="h-16 bg-white/90 border-b border-primary-50 flex items-center justify-between px-6">
+    <header className="h-16 bg-white/90 border-b border-primary-50 flex items-center justify-between px-6 relative">
       {/* 搜索框 */}
       <div className="flex items-center gap-4">
         <div className="relative group">
@@ -21,10 +28,24 @@ export default function Header() {
       {/* 右侧工具栏 */}
       <div className="flex items-center gap-3">
         {/* 通知按钮 */}
-        <button className="relative p-2.5 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFF5F5] rounded-xl transition-all duration-200">
-          <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-[#FF6B6B] rounded-full"></span>
-        </button>
+        <div className="relative">
+          <button 
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="relative p-2.5 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFF5F5] rounded-xl transition-all duration-200"
+          >
+            <Bell size={20} />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 w-5 h-5 bg-[#FF6B6B] text-white text-xs rounded-full flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+          
+          {/* 通知面板 */}
+          {showNotifications && (
+            <NotificationPanel onClose={() => setShowNotifications(false)} />
+          )}
+        </div>
 
         {/* 用户信息 */}
         <div className="flex items-center gap-3 pl-3 pr-4 py-2 bg-[#FFF8F0] rounded-xl">
