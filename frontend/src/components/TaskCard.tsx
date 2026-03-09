@@ -9,29 +9,29 @@ interface TaskCardProps {
 
 const statusConfig = {
   todo: { 
-    bg: 'bg-[#FFF5F5]', 
-    text: 'text-[#E85555]', 
+    bg: 'bg-primary-50 dark:bg-primary-100/20', 
+    text: 'text-danger-dark', 
     icon: Circle,
     label: '待办' 
   },
   in_progress: { 
-    bg: 'bg-[#E0F7F5]', 
-    text: 'text-[#3AB8B0]', 
+    bg: 'bg-success-light dark:bg-success-light/20', 
+    text: 'text-success-dark', 
     icon: Play,
     label: '进行中' 
   },
   done: { 
-    bg: 'bg-[#E0F7F5]', 
-    text: 'text-[#3AB8B0]', 
+    bg: 'bg-success-light dark:bg-success-light/20', 
+    text: 'text-success-dark', 
     icon: CheckCircle,
     label: '已完成' 
   },
 }
 
 const priorityConfig = {
-  low: { bg: 'bg-[#F5F5F5]', text: 'text-[#636E72]', icon: Flag, label: '低' },
-  medium: { bg: 'bg-[#FFF3E0]', text: 'text-[#E88860]', icon: Flag, label: '中' },
-  high: { bg: 'bg-[#FFE8E8]', text: 'text-[#E85555]', icon: AlertTriangle, label: '高' },
+  low: { bg: 'bg-neutral-100 dark:bg-neutral-800', text: 'text-neutral-warm dark:text-neutral-light', icon: Flag, label: '低' },
+  medium: { bg: 'bg-warning-light dark:bg-warning-light/20', text: 'text-warning-dark', icon: Flag, label: '中' },
+  high: { bg: 'bg-danger-light dark:bg-danger-light/20', text: 'text-danger-dark', icon: AlertTriangle, label: '高' },
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
@@ -59,13 +59,13 @@ export default function TaskCard({ task }: TaskCardProps) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-medium text-sm text-[#2D3436] group-hover:text-[#FF6B6B] transition-colors truncate">
+            <h3 className="font-medium text-sm text-neutral-charcoal dark:text-white group-hover:text-primary transition-colors truncate">
               {task.title}
             </h3>
           </div>
           
           {task.description && (
-            <p className="text-xs text-[#636E72] line-clamp-1 mb-2">{task.description}</p>
+            <p className="text-xs text-neutral-warm dark:text-neutral-light line-clamp-1 mb-2">{task.description}</p>
           )}
           
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -78,7 +78,7 @@ export default function TaskCard({ task }: TaskCardProps) {
               {priority.label}
             </span>
             {task.due_date && (
-              <span className="text-xs text-[#636E72] flex items-center gap-0.5">
+              <span className="text-xs text-neutral-warm dark:text-neutral-light flex items-center gap-0.5">
                 <Calendar size={10} />
                 {new Date(task.due_date).toLocaleDateString()}
               </span>
@@ -105,7 +105,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           )}
           <button
             onClick={handleDelete}
-            className="btn-ghost text-xs py-1 px-2 text-[#FF6B6B] hover:bg-[#FFF5F5] flex items-center gap-1"
+            className="btn-ghost text-xs py-1 px-2 text-primary hover:bg-primary-50 dark:hover:bg-neutral-700 flex items-center gap-1"
           >
             <Trash2 size={12} />
           </button>

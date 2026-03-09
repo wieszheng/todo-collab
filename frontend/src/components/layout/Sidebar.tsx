@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Home, CheckSquare, Users, Settings, Sparkles, ListTodo } from 'lucide-react'
+import { Home, ListTodo, Users, Settings, Sparkles } from 'lucide-react'
 
 const navItems = [
   { to: '/', icon: Home, label: '首页' },
@@ -10,16 +10,16 @@ const navItems = [
 
 export default function Sidebar() {
   return (
-    <aside className="w-52 bg-white/90 border-r border-primary-50 flex flex-col">
+    <aside className="w-52 border-r flex flex-col" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-light)' }}>
       {/* Logo 区域 */}
-      <div className="p-4 border-b border-primary-50">
+      <div className="p-4 border-b" style={{ borderColor: 'var(--border-light)' }}>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
             <Sparkles className="text-white" size={16} />
           </div>
           <div>
             <h1 className="text-base font-bold text-gradient">Todo Collab</h1>
-            <p className="text-xs text-[#636E72]">待办事项协作</p>
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>待办事项协作</p>
           </div>
         </div>
       </div>
@@ -42,9 +42,9 @@ export default function Sidebar() {
 
       {/* 底部统计卡片 */}
       <div className="p-3">
-        <div className="card p-3 text-center" style={{ background: 'linear-gradient(135deg, #FFF5F5 0%, #FFF8F0 100%)' }}>
-          <ListTodo className="mx-auto text-[#FF6B6B]" size={24} />
-          <p className="text-xs text-[#636E72] mt-1">今日待办</p>
+        <div className="card p-3 text-center" style={{ background: 'linear-gradient(135deg, var(--bg-hover) 0%, var(--bg-accent) 100%)' }}>
+          <ListTodo className="mx-auto text-primary" size={24} />
+          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>今日待办</p>
           <p className="text-xl font-bold text-gradient">3 项</p>
         </div>
       </div>

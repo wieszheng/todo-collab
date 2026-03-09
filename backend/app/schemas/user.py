@@ -101,3 +101,47 @@ class CommentResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+# ========== Team Schemas ==========
+class TeamCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+
+class TeamUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+
+class TeamMemberResponse(BaseModel):
+    id: str
+    team_id: str
+    user_id: str
+    role: str
+    joined_at: datetime
+    user: Optional[UserResponse] = None
+
+    class Config:
+        from_attributes = True
+
+
+class TeamResponse(BaseModel):
+    id: str
+    name: str
+    description: Optional[str] = None
+    creator_id: str
+    created_at: datetime
+    members: Optional[List[TeamMemberResponse]] = None
+
+    class Config:
+        from_attributes = True
+
+
+class InviteMember(BaseModel):
+    email: EmailStr
+    role: str = "member"
+
+
+class UpdateMemberRole(BaseModel):
+    role: str

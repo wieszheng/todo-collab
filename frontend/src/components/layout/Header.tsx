@@ -20,10 +20,10 @@ export default function Header() {
   }
 
   return (
-    <header className="h-12 bg-white/90 border-b border-[#E8E8E8] flex items-center justify-between px-4">
+    <header className="h-12 border-b flex items-center justify-between px-4" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-light)' }}>
       {/* 左侧标题 */}
       <div className="flex items-center gap-2">
-        <h1 className="text-sm font-semibold text-[#2D3436]">待办事项协作平台</h1>
+        <h1 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>待办事项协作平台</h1>
       </div>
 
       {/* 右侧操作 */}
@@ -32,11 +32,12 @@ export default function Header() {
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-1.5 text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFF5F5] rounded-lg transition-colors"
+            className="relative p-1.5 rounded-lg transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
           >
             <Bell size={18} />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#FF6B6B] text-white text-xs rounded-full flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-white text-xs rounded-full flex items-center justify-center">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
@@ -51,15 +52,16 @@ export default function Header() {
         <div className="relative">
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center gap-2 p-1 hover:bg-[#FFF5F5] rounded-lg transition-colors"
+            className="flex items-center gap-2 p-1 rounded-lg transition-colors"
+            style={{ backgroundColor: 'transparent' }}
           >
             <div className="w-7 h-7 rounded-lg bg-gradient-primary flex items-center justify-center text-white text-xs font-medium shadow-glow">
               {user?.nickname?.[0] || user?.email[0].toUpperCase()}
             </div>
-            <span className="text-sm text-[#2D3436] hidden sm:block">
+            <span className="text-sm hidden sm:block" style={{ color: 'var(--text-primary)' }}>
               {user?.nickname || user?.email.split('@')[0]}
             </span>
-            <ChevronDown size={14} className="text-[#636E72]" />
+            <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />
           </button>
 
           {showUserMenu && (
@@ -67,14 +69,16 @@ export default function Header() {
               <Link
                 to="/profile"
                 onClick={() => setShowUserMenu(false)}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-[#636E72] hover:text-[#FF6B6B] hover:bg-[#FFF5F5] rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--text-secondary)' }}
               >
                 <User size={16} />
                 个人设置
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#FF6B6B] hover:bg-[#FFE8E8] rounded-lg transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-primary rounded-lg transition-colors"
+                style={{ backgroundColor: 'transparent' }}
               >
                 <LogOut size={16} />
                 退出登录

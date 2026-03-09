@@ -47,48 +47,48 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="card p-3 hover:shadow-glow group">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[#FFF5F5] group-hover:bg-[#FFE8E8] transition-colors">
-              <CheckSquare className="text-[#FF6B6B]" size={18} />
+            <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-100/20 group-hover:bg-primary-100 dark:group-hover:bg-primary-100/30 transition-colors">
+              <CheckSquare className="text-primary" size={18} />
             </div>
             <div>
               <p className="text-xl font-bold text-gradient">{todoCount}</p>
-              <p className="text-[#636E72] text-xs">待办任务</p>
+              <p className="text-neutral-warm dark:text-neutral-light text-xs">待办任务</p>
             </div>
           </div>
         </div>
 
         <div className="card p-3 hover:shadow-glow-mint group">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[#E0F7F5] group-hover:bg-[#D0F0EC] transition-colors">
-              <Clock className="text-[#4ECDC4]" size={18} />
+            <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20 group-hover:bg-success-light/80 dark:group-hover:bg-success-light/30 transition-colors">
+              <Clock className="text-success" size={18} />
             </div>
             <div>
-              <p className="text-xl font-bold text-[#4ECDC4]">{inProgressCount}</p>
-              <p className="text-[#636E72] text-xs">进行中</p>
+              <p className="text-xl font-bold text-success">{inProgressCount}</p>
+              <p className="text-neutral-warm dark:text-neutral-light text-xs">进行中</p>
             </div>
           </div>
         </div>
 
         <div className="card p-3 group">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[#E0F7F5] group-hover:bg-[#D0F0EC] transition-colors">
-              <TrendingUp className="text-[#4ECDC4]" size={18} />
+            <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20 group-hover:bg-success-light/80 dark:group-hover:bg-success-light/30 transition-colors">
+              <TrendingUp className="text-success" size={18} />
             </div>
             <div>
-              <p className="text-xl font-bold text-[#4ECDC4]">{doneCount}</p>
-              <p className="text-[#636E72] text-xs">已完成</p>
+              <p className="text-xl font-bold text-success">{doneCount}</p>
+              <p className="text-neutral-warm dark:text-neutral-light text-xs">已完成</p>
             </div>
           </div>
         </div>
 
         <div className="card p-3 group">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[#FFF3E0] group-hover:bg-[#FFE8D0] transition-colors">
-              <AlertCircle className="text-[#FFA07A]" size={18} />
+            <div className="p-2 rounded-lg bg-warning-light dark:bg-warning-light/20 group-hover:bg-warning-light/80 dark:group-hover:bg-warning-light/30 transition-colors">
+              <AlertCircle className="text-warning" size={18} />
             </div>
             <div>
-              <p className="text-xl font-bold text-[#FFA07A]">{highPriorityCount}</p>
-              <p className="text-[#636E72] text-xs">高优先级</p>
+              <p className="text-xl font-bold text-warning">{highPriorityCount}</p>
+              <p className="text-neutral-warm dark:text-neutral-light text-xs">高优先级</p>
             </div>
           </div>
         </div>
@@ -96,32 +96,32 @@ export default function DashboardPage() {
 
       {/* 最近任务 */}
       <div className="card">
-        <div className="p-3 border-b border-[#E8E8E8] flex items-center justify-between">
+        <div className="p-3 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <ListTodo className="text-[#FF6B6B]" size={16} />
-            <h2 className="text-sm font-semibold text-[#2D3436]">最近任务</h2>
+            <ListTodo className="text-primary" size={16} />
+            <h2 className="text-sm font-semibold text-neutral-charcoal dark:text-white">最近任务</h2>
           </div>
-          <a href="/tasks" className="text-xs text-[#FF6B6B] hover:text-[#E85555]">查看全部 →</a>
+          <a href="/tasks" className="text-xs text-primary hover:text-primary-dark">查看全部 →</a>
         </div>
         <div className="p-3">
           {isLoading ? (
-            <div className="text-center py-6 text-[#636E72] text-sm">加载中...</div>
+            <div className="text-center py-6 text-neutral-warm dark:text-neutral-light text-sm">加载中...</div>
           ) : tasks.length === 0 ? (
             <div className="text-center py-8">
-              <ListTodo className="mx-auto text-[#B2BEC3]" size={36} />
-              <p className="text-[#636E72] mt-2 text-sm">暂无任务，创建一个吧</p>
+              <ListTodo className="mx-auto text-neutral-light" size={36} />
+              <p className="text-neutral-warm dark:text-neutral-light mt-2 text-sm">暂无任务，创建一个吧</p>
             </div>
           ) : (
             <div className="space-y-2">
               {tasks.slice(0, 5).map((task, index) => (
                 <div
                   key={task.id}
-                  className="flex items-center justify-between p-2.5 bg-[#FFF8F0] rounded-lg hover:bg-[#FFF5F5] transition-colors"
+                  className="flex items-center justify-between p-2.5 bg-secondary-cream dark:bg-neutral-800 rounded-lg hover:bg-primary-50 dark:hover:bg-neutral-700 transition-colors"
                   style={{ animationDelay: `${index * 30}ms` }}
                 >
                   <div className="min-w-0">
-                    <h3 className="font-medium text-sm text-[#2D3436] truncate">{task.title}</h3>
-                    <p className="text-xs text-[#636E72] mt-0.5 flex items-center gap-1">
+                    <h3 className="font-medium text-sm text-neutral-charcoal dark:text-white truncate">{task.title}</h3>
+                    <p className="text-xs text-neutral-warm dark:text-neutral-light mt-0.5 flex items-center gap-1">
                       {task.due_date ? (
                         <>
                           <Calendar size={10} />

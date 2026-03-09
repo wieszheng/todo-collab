@@ -33,12 +33,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#FFF8F0]">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-base)' }}>
       {/* 装饰性背景 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-16 left-16 w-48 h-48 bg-[#FFB4A2] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-16 right-16 w-64 h-64 bg-[#A8DADC] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-[#FF6B6B] rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute top-16 left-16 w-48 h-48 bg-primary rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute bottom-16 right-16 w-64 h-64 bg-secondary-lavender rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-primary rounded-full opacity-10 blur-3xl"></div>
       </div>
 
       <div className="relative w-full max-w-sm">
@@ -48,14 +48,14 @@ export default function LoginPage() {
             <Sparkles className="text-white" size={24} />
           </div>
           <h2 className="text-2xl font-bold text-gradient">Todo Collab</h2>
-          <p className="text-[#636E72] text-sm mt-1">待办事项协作平台</p>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>待办事项协作平台</p>
         </div>
 
         {/* 登录卡片 */}
         <div className="card p-5 animate-in">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-[#FFE8E8] text-[#E85555] p-3 rounded-lg text-xs flex items-center gap-1.5">
+              <div className="bg-danger-light dark:bg-danger-light/20 text-danger-dark p-3 rounded-lg text-xs flex items-center gap-1.5">
                 <span>!</span>
                 {error}
               </div>
@@ -63,7 +63,7 @@ export default function LoginPage() {
             
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                   <Mail size={14} className="inline mr-1" />
                   邮箱
                 </label>
@@ -78,7 +78,7 @@ export default function LoginPage() {
               </div>
               
               <div>
-                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                   <Lock size={14} className="inline mr-1" />
                   密码
                 </label>
@@ -102,9 +102,9 @@ export default function LoginPage() {
             </button>
 
             <div className="text-center text-xs pt-1">
-              <span className="text-[#636E72]">还没有账号？</span>
+              <span style={{ color: 'var(--text-secondary)' }}>还没有账号？</span>
               {' '}
-              <Link to="/register" className="text-[#FF6B6B] hover:text-[#E85555] font-medium">
+              <Link to="/register" className="text-primary hover:text-primary-dark font-medium">
                 立即注册
               </Link>
             </div>

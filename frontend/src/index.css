@@ -5,41 +5,88 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 设计系统变量 */
+/* 设计系统变量 - 浅色模式（暖色调） */
 :root {
-  /* 主色 */
+  /* 主色 - 可动态修改 */
   --color-primary: #FF6B6B;
-  --color-primary-light: #FF8585;
+  --color-primary-light: #FF8A8A;
   --color-primary-dark: #E85555;
   
+  /* 阴影 */
+  --shadow-glow: 0 4px 20px rgba(255, 107, 107, 0.3);
+  
   /* 辅助色 */
-  --color-mint: #4ECDC4;
-  --color-lavender: #A8DADC;
-  --color-cream: #FFF8F0;
+  --color-mint: #20C997;
+  --color-lavender: #9775FA;
+  --color-amber: #F59F00;
   
-  /* 中性色 */
-  --color-charcoal: #2D3436;
-  --color-warm-gray: #636E72;
-  --color-light-gray: #B2BEC3;
-  --color-milk-white: #FAFAFA;
+  /* 背景色 - 温暖奶油色系 */
+  --bg-base: #FFF8F0;
+  --bg-card: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-hover: #FFF5F5;
+  --bg-accent: #FFF0E8;
+  --bg-elevated: #FFFFFF;
   
-  /* 状态 */
-  --color-success: #4ECDC4;
+  /* 文字色 - 暖灰色 */
+  --text-primary: #2D3436;
+  --text-secondary: #636E72;
+  --text-muted: #A0A0A0;
+  
+  /* 边框色 */
+  --border-light: #F0E6E0;
+  --border-medium: #E0D5CE;
+  
+  /* 状态色 */
+  --color-success: #20C997;
   --color-warning: #FFA07A;
   --color-danger: #FF6B6B;
+}
+
+/* 深色模式 - 暖灰色调（与浅色模式和谐统一） */
+.dark {
+  /* 背景 - 暖灰色渐进层次 */
+  --bg-base: #1C1816;        /* 深暖灰 - 主背景 */
+  --bg-card: #252220;        /* 卡片背景 - 略亮 */
+  --bg-input: #2D2A27;       /* 输入框背景 */
+  --bg-hover: #3A3532;       /* 悬停状态 */
+  --bg-accent: #322A26;      /* 强调区块 */
+  --bg-elevated: #302C29;    /* 弹窗/下拉菜单 */
+  
+  /* 文字 - 暖白色 */
+  --text-primary: #F5F0EB;   /* 主文字 - 暖白 */
+  --text-secondary: #A89F98; /* 次级文字 - 暖灰 */
+  --text-muted: #6B6460;     /* 弱化文字 */
+  
+  /* 边框 - 暖色边框 */
+  --border-light: #3A3532;
+  --border-medium: #4A4542;
+  
+  /* 主色在深色模式下稍微提亮 */
+  --color-primary: #FF7B7B;
+  --color-primary-light: #FF9999;
+  --color-primary-dark: #E85555;
+  
+  /* 深色模式下调整阴影 */
+  --shadow-glow: 0 4px 24px rgba(255, 107, 107, 0.2);
+  
+  /* 辅助色深色模式调整 */
+  --color-mint: #38D9A9;
+  --color-lavender: #B197FC;
+  --color-amber: #FCC419;
 }
 
 /* 基础样式 */
 @layer base {
   * {
-    border-color: #E8E8E8;
+    border-color: var(--border-light);
   }
   
   body {
-    color: #2D3436;
+    color: var(--text-primary);
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
     -webkit-font-smoothing: antialiased;
-    background-color: #FFF8F0;
+    background-color: var(--bg-base);
     min-height: 100vh;
     font-size: 14px;
   }
@@ -51,40 +98,53 @@
   }
   
   ::-webkit-scrollbar-track {
-    background: #FFF8F0;
+    background: var(--bg-base);
     border-radius: 3px;
   }
   
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
     border-radius: 3px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #E85555 0%, #E88860 100%);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, #E88860 100%);
+  }
+  
+  /* 深色模式滚动条优化 */
+  .dark ::-webkit-scrollbar-track {
+    background: var(--bg-card);
   }
 }
 
 /* 组件样式 */
 @layer components {
-  /* 卡片基础 - 更紧凑 */
+  /* 卡片基础 */
   .card {
-    background-color: #FAFAFA;
+    background-color: var(--bg-card);
     border-radius: 0.75rem;
-    border: 1px solid rgba(255, 107, 107, 0.1);
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: all 0.2s ease;
   }
   
   .card:hover {
-    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
   }
   
-  /* 按钮样式 - 更紧凑 */
+  .dark .card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* 按钮样式 */
   .btn-primary {
     padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
     color: white;
     font-weight: 500;
     font-size: 0.875rem;
@@ -96,7 +156,8 @@
   }
   
   .btn-primary:hover {
-    background: linear-gradient(135deg, #E85555 0%, #E88860 100%);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, #E88860 100%);
+    box-shadow: var(--shadow-glow);
   }
   
   .btn-primary:active {
@@ -110,20 +171,20 @@
   
   .btn-secondary {
     padding: 0.5rem 1rem;
-    background-color: #FAFAFA;
-    color: #2D3436;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
     font-weight: 500;
     font-size: 0.875rem;
     border-radius: 0.5rem;
-    border: 1px solid #B2BEC3;
+    border: 1px solid var(--border-medium);
     transition: all 0.2s ease;
     cursor: pointer;
   }
   
   .btn-secondary:hover {
-    border-color: #FF6B6B;
-    color: #FF6B6B;
-    background-color: #FFF5F5;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: var(--bg-hover);
   }
   
   .btn-secondary:active {
@@ -132,7 +193,7 @@
   
   .btn-ghost {
     padding: 0.375rem 0.75rem;
-    color: #636E72;
+    color: var(--text-secondary);
     font-size: 0.875rem;
     border-radius: 0.5rem;
     transition: all 0.2s ease;
@@ -142,37 +203,41 @@
   }
   
   .btn-ghost:hover {
-    color: #FF6B6B;
-    background-color: #FFF5F5;
+    color: var(--color-primary);
+    background-color: var(--bg-hover);
   }
   
-  /* 输入框 - 更紧凑 */
+  /* 输入框 */
   .input {
     width: 100%;
     padding: 0.5rem 0.75rem;
-    background-color: white;
-    border: 1px solid #B2BEC3;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-medium);
     border-radius: 0.5rem;
     transition: all 0.2s ease;
     outline: none;
-    color: #2D3436;
+    color: var(--text-primary);
     font-size: 0.875rem;
   }
   
   .input::placeholder {
-    color: #B2BEC3;
+    color: var(--text-muted);
   }
   
   .input:hover {
-    border-color: #FFA07A;
+    border-color: var(--color-warning);
   }
   
   .input:focus {
-    border-color: #FF6B6B;
-    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.12);
   }
   
-  /* 标签 - 更紧凑 */
+  .dark .input:focus {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+  }
+  
+  /* 标签 */
   .tag {
     display: inline-flex;
     align-items: center;
@@ -183,36 +248,66 @@
   }
   
   .tag-primary {
-    background-color: #FFE8E8;
-    color: #E85555;
+    background-color: rgba(255, 107, 107, 0.15);
+    color: var(--color-primary-dark);
+  }
+  
+  .dark .tag-primary {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: var(--color-primary-light);
   }
   
   .tag-mint {
-    background-color: #E0F7F5;
-    color: #3AB8B0;
+    background-color: rgba(32, 201, 151, 0.15);
+    color: #12B886;
+  }
+  
+  .dark .tag-mint {
+    background-color: rgba(56, 217, 169, 0.2);
+    color: #38D9A9;
   }
   
   .tag-lavender {
-    background-color: #E8F4F5;
-    color: #7FB8BA;
+    background-color: rgba(151, 117, 250, 0.15);
+    color: #845EF7;
+  }
+  
+  .dark .tag-lavender {
+    background-color: rgba(177, 151, 252, 0.2);
+    color: #B197FC;
   }
   
   .tag-success {
-    background-color: #E0F7F5;
-    color: #3AB8B0;
+    background-color: rgba(32, 201, 151, 0.15);
+    color: #12B886;
+  }
+  
+  .dark .tag-success {
+    background-color: rgba(56, 217, 169, 0.2);
+    color: #38D9A9;
   }
   
   .tag-warning {
-    background-color: #FFF3E0;
+    background-color: rgba(255, 160, 122, 0.15);
     color: #E88860;
   }
   
-  .tag-danger {
-    background-color: #FFE8E8;
-    color: #E85555;
+  .dark .tag-warning {
+    background-color: rgba(255, 160, 122, 0.2);
+    color: #FFB090;
   }
   
-  /* 侧边栏项 - 更紧凑 */
+  .tag-danger {
+    background-color: rgba(255, 107, 107, 0.15);
+    color: var(--color-primary-dark);
+  }
+  
+  .dark .tag-danger {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: var(--color-primary-light);
+  }
+  
+  /* 侧边栏项 */
   .nav-item {
     display: flex;
     align-items: center;
@@ -220,23 +315,23 @@
     padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
     transition: all 0.2s ease;
-    color: #636E72;
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.875rem;
   }
   
   .nav-item:hover {
-    background-color: #FFF5F5;
-    color: #FF6B6B;
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
   }
   
   .nav-item.active {
-    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
     color: white;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+    box-shadow: var(--shadow-glow);
   }
   
-  /* 头像 - 更小 */
+  /* 头像 */
   .avatar {
     width: 2rem;
     height: 2rem;
@@ -246,7 +341,7 @@
     justify-content: center;
     font-weight: 500;
     font-size: 0.75rem;
-    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
     color: white;
   }
 }
@@ -254,30 +349,34 @@
 /* 工具类 */
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
   .bg-gradient-primary {
-    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
   }
   
   .bg-gradient-soft {
-    background: linear-gradient(135deg, #FFF8F0 0%, #FFE8E8 100%);
+    background: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-hover) 100%);
   }
   
   .shadow-glow {
-    box-shadow: 0 2px 12px rgba(255, 107, 107, 0.2);
+    box-shadow: var(--shadow-glow);
   }
   
   .shadow-glow-mint {
-    box-shadow: 0 2px 12px rgba(78, 205, 196, 0.2);
+    box-shadow: 0 2px 12px rgba(32, 201, 151, 0.2);
+  }
+  
+  .dark .shadow-glow-mint {
+    box-shadow: 0 2px 16px rgba(56, 217, 169, 0.25);
   }
   
   .bg-glass {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--bg-card);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }

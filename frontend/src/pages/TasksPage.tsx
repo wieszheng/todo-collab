@@ -43,11 +43,11 @@ export default function TasksPage() {
       {/* 头部 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-[#2D3436] flex items-center gap-2">
-            <ListTodo className="text-[#FF6B6B]" size={22} />
+          <h1 className="text-xl font-bold text-neutral-charcoal dark:text-white flex items-center gap-2">
+            <ListTodo className="text-primary" size={22} />
             任务列表
           </h1>
-          <p className="text-[#636E72] text-sm mt-0.5">管理你的所有任务</p>
+          <p className="text-neutral-warm dark:text-neutral-light text-sm mt-0.5">管理你的所有任务</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -60,12 +60,12 @@ export default function TasksPage() {
 
       {/* 筛选器 */}
       <div className="card p-3 flex items-center gap-4 flex-wrap">
-        <div className="flex items-center gap-2 text-[#636E72]">
+        <div className="flex items-center gap-2 text-neutral-warm dark:text-neutral-light">
           <Filter size={16} />
         </div>
         
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#636E72]">状态:</span>
+          <span className="text-xs text-neutral-warm dark:text-neutral-light">状态:</span>
           <div className="flex gap-1">
             {statusOptions.map((s) => {
               const Icon = s.icon
@@ -76,7 +76,7 @@ export default function TasksPage() {
                   className={`px-2 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
                     statusFilter === s.value
                       ? 'bg-gradient-primary text-white shadow-glow'
-                      : 'bg-[#F5F5F5] text-[#636E72] hover:bg-[#FFF5F5]'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-warm dark:text-neutral-light hover:bg-primary-50 dark:hover:bg-neutral-700'
                   }`}
                 >
                   <Icon size={12} />
@@ -88,7 +88,7 @@ export default function TasksPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#636E72]">优先级:</span>
+          <span className="text-xs text-neutral-warm dark:text-neutral-light">优先级:</span>
           <div className="flex gap-1">
             {priorityOptions.map((p) => {
               const Icon = p.icon
@@ -99,7 +99,7 @@ export default function TasksPage() {
                   className={`px-2 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
                     priorityFilter === p.value
                       ? 'bg-gradient-primary text-white shadow-glow'
-                      : 'bg-[#F5F5F5] text-[#636E72] hover:bg-[#FFF5F5]'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-warm dark:text-neutral-light hover:bg-primary-50 dark:hover:bg-neutral-700'
                   }`}
                 >
                   {Icon && <Icon size={12} />}
@@ -113,12 +113,12 @@ export default function TasksPage() {
 
       {/* 任务列表 */}
       {isLoading ? (
-        <div className="text-center py-8 text-[#636E72] text-sm">加载中...</div>
+        <div className="text-center py-8 text-neutral-warm dark:text-neutral-light text-sm">加载中...</div>
       ) : tasks.length === 0 ? (
         <div className="card p-8 text-center">
-          <ListTodo className="mx-auto text-[#B2BEC3]" size={40} />
-          <p className="text-[#636E72] mt-2 text-sm">暂无任务</p>
-          <p className="text-[#B2BEC3] text-xs mt-1">点击"新建任务"创建第一个吧</p>
+          <ListTodo className="mx-auto text-neutral-light" size={40} />
+          <p className="text-neutral-warm dark:text-neutral-light mt-2 text-sm">暂无任务</p>
+          <p className="text-neutral-light text-xs mt-1">点击"新建任务"创建第一个吧</p>
         </div>
       ) : (
         <div className="grid gap-3">

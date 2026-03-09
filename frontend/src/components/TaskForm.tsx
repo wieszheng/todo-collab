@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TaskCreate } from '../types'
-import { X, UserPlus, Flag, Calendar, AlertCircle, FileText } from 'lucide-react'
+import { X, UserPlus, Flag, Calendar, FileText } from 'lucide-react'
 import { useUsers } from '../hooks/useUsers'
 
 interface TaskFormProps {
@@ -43,7 +43,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         <button
           type="button"
           onClick={onCancel}
-          className="p-1.5 text-[#636E72] hover:text-[#2D3436] hover:bg-[#F5F5F5] rounded-lg transition-colors"
+          className="p-1.5 text-neutral-warm dark:text-neutral-light hover:text-neutral-charcoal dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors"
         >
           <X size={16} />
         </button>
@@ -51,7 +51,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
       <div className="space-y-3">
         <div>
-          <label className="block text-xs font-medium text-[#2D3436] mb-1">
+          <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">
             <FileText size={14} className="inline mr-1" />
             任务标题 *
           </label>
@@ -66,7 +66,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[#2D3436] mb-1">
+          <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">
             任务描述
           </label>
           <textarea
@@ -80,7 +80,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-[#2D3436] mb-1">
+            <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">
               <Flag size={14} className="inline mr-1" />
               优先级
             </label>
@@ -96,7 +96,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#2D3436] mb-1">
+            <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">
               <Calendar size={14} className="inline mr-1" />
               截止日期
             </label>
@@ -109,9 +109,8 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
           </div>
         </div>
 
-        {/* 分配给 */}
         <div>
-          <label className="block text-xs font-medium text-[#2D3436] mb-1">
+          <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">
             <UserPlus size={14} className="inline mr-1" />
             分配给
           </label>
@@ -127,11 +126,11 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
               </option>
             ))}
           </select>
-          <p className="text-xs text-[#636E72] mt-0.5">分配后，该成员会收到通知</p>
+          <p className="text-xs text-neutral-warm dark:text-neutral-light mt-0.5">分配后，该成员会收到通知</p>
         </div>
       </div>
 
-      <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-[#E8E8E8]">
+      <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-700">
         <button
           type="button"
           onClick={onCancel}

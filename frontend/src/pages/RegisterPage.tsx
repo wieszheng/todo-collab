@@ -27,11 +27,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#FFF8F0]">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-base)' }}>
       {/* 装饰性背景 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-56 h-56 bg-[#A8DADC] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-48 h-48 bg-[#FFB4A2] rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute top-20 right-20 w-56 h-56 bg-secondary-lavender rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-48 h-48 bg-warning rounded-full opacity-20 blur-3xl"></div>
       </div>
 
       <div className="relative w-full max-w-sm">
@@ -41,14 +41,14 @@ export default function RegisterPage() {
             <Sparkles className="text-white" size={24} />
           </div>
           <h2 className="text-2xl font-bold text-gradient">创建账号</h2>
-          <p className="text-[#636E72] text-sm mt-1">加入 Todo Collab</p>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>加入 Todo Collab</p>
         </div>
 
         {/* 注册卡片 */}
         <div className="card p-5 animate-in">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-[#FFE8E8] text-[#E85555] p-3 rounded-lg text-xs flex items-center gap-1.5">
+              <div className="bg-danger-light dark:bg-danger-light/20 text-danger-dark p-3 rounded-lg text-xs flex items-center gap-1.5">
                 <span>!</span>
                 {error}
               </div>
@@ -56,7 +56,7 @@ export default function RegisterPage() {
             
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                   <Mail size={14} className="inline mr-1" />
                   邮箱 *
                 </label>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
               </div>
               
               <div>
-                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                   <User size={14} className="inline mr-1" />
                   昵称
                 </label>
@@ -85,7 +85,7 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#2D3436] mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                   <Lock size={14} className="inline mr-1" />
                   密码 *
                 </label>
@@ -110,9 +110,9 @@ export default function RegisterPage() {
             </button>
 
             <div className="text-center text-xs pt-1">
-              <span className="text-[#636E72]">已有账号？</span>
+              <span style={{ color: 'var(--text-secondary)' }}>已有账号？</span>
               {' '}
-              <Link to="/login" className="text-[#FF6B6B] hover:text-[#E85555] font-medium">
+              <Link to="/login" className="text-primary hover:text-primary-dark font-medium">
                 立即登录
               </Link>
             </div>
