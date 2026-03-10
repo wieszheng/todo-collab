@@ -20,11 +20,11 @@ async def lifespan(app: FastAPI):
     await init_db()
     # 启动定时任务调度器
     await start_scheduler()
-    print("🚀 Todo Collab 服务已启动")
+    print("[Todo Collab] Service started")
     yield
     # 关闭时清理资源
     await stop_scheduler()
-    print("👋 Todo Collab 服务已关闭")
+    print("[Todo Collab] Service stopped")
 
 
 app = FastAPI(
