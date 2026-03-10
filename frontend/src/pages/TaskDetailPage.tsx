@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Edit, Trash2, ListTodo, Calendar, Flag, AlertTriangle, CheckCircle, Play, Circle, MessageCircle, Send, Clock3 } from 'lucide-react'
-import { useTask, useUpdateTask, useDeleteTask, useUpdateTaskStatus } from '../hooks/useTasks'
+import { ArrowLeft, Edit, Trash2, ListTodo, Calendar, Flag, AlertTriangle, CheckCircle, Play, Circle, MessageCircle, Send, Clock3, UserPlus, User } from 'lucide-react'
+import { useTask, useUpdateTask, useDeleteTask, useUpdateTaskStatus, useAssignTask } from '../hooks/useTasks'
 import { useComments, useCreateComment, useDeleteComment } from '../hooks/useComments'
+import { useUsers } from '../hooks/useUsers'
 import { useAuthStore } from '../stores/authStore'
 import TaskForm from '../components/TaskForm'
 import { useState } from 'react'
@@ -27,10 +28,12 @@ export default function TaskDetailPage() {
   const user = useAuthStore((s) => s.user)
 
   const { data: task, isLoading } = useTask(taskId!)
+  const { data: users = [] } = useUsers()
   const { data: comments = [], isLoading: loadingComments } = useComments(taskId!)
   const updateTask = useUpdateTask()
   const deleteTask = useDeleteTask()
   const updateStatus = useUpdateTaskStatus()
+  const assignTask = useAssignTask()
   const createComment = useCreateComment(taskId!)
   const deleteComment = useDeleteComment(taskId!)
 
@@ -48,6 +51,11 @@ export default function TaskDetailPage() {
 
   const handleStatusChange = async (status: string) => {
     await updateStatus.mutateAsync({ taskId: taskId!, status })
+  }
+
+  const handleAssign = async (assigneeId: string) => {
+    if (!assigneeId) return
+    await assignTask.mutateAsync({ taskId: taskId!, assigneeId })
   }
 
   const handleAddComment = async () => {
@@ -196,6 +204,45 @@ export default function TaskDetailPage() {
                 </h2>
               </div>
               <div className="p-3 space-y-2">
+                {/* 分配人 */}
+                <div className="p-2.5 rounded-lg" style={{ backgroundColor: 'var(--bg-accent)' }}>
+                  <span className="text-xs flex items-center gap-1" style={{ color: 'var(--text-secondary)' }}>
+                    <UserPlus size={10} />
+                    分配给
+                  </span>
+                  {task.creator_id === user?.id ? (
+                    <select
+                      value={task.assignee_id || ''}
+                      onChange={(e) => handleAssign(e.target.value)}
+                      disabled={assignTask.isPending}
+                      className="mt-1 w-full text-xs font-medium bg-transparent border-none p-0 focus:ring-0 cursor-pointer"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      <option value="">未分配</option>
+                      {users.map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {u.nickname || u.email}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="text-xs font-medium mt-0.5" style={{ color: 'var(--text-primary)' }}>
+                      {task.assignee?.nickname || task.assignee?.email || '未分配'}
+                    </p>
+                  )}
+                </div>
+                
+                {/* 创建者 */}
+                <div className="p-2.5 rounded-lg" style={{ backgroundColor: 'var(--bg-accent)' }}>
+                  <span className="text-xs flex items-center gap-1" style={{ color: 'var(--text-secondary)' }}>
+                    <User size={10} />
+                    创建者
+                  </span>
+                  <p className="text-xs font-medium mt-0.5" style={{ color: 'var(--text-primary)' }}>
+                    {task.creator?.nickname || task.creator?.email || '未知'}
+                  </p>
+                </div>
+                
                 <div className="p-2.5 rounded-lg" style={{ backgroundColor: 'var(--bg-accent)' }}>
                   <span className="text-xs flex items-center gap-1" style={{ color: 'var(--text-secondary)' }}>
                     <Clock3 size={10} />

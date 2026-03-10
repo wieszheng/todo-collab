@@ -4,15 +4,33 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
-from app.schemas.user import TaskCreate, TaskUpdate, TaskResponse
+from app.schemas.user import TaskCreate, TaskUpdate, TaskResponse, UserResponse
 from app.models.models import Task
 from app.api.deps import get_current_user
 from app.models.models import User
 from app.services.notification_service import notify_task_assigned
 
 router = APIRouter()
+
+
+async def load_task_users(db: AsyncSession, task: Task) -> Task:
+    """加载任务的关联用户信息"""
+    if task.creator_id:
+        result = await db.execute(select(User).where(User.id == task.creator_id))
+        creator = result.scalar_one_or_none()
+        if creator:
+            task.creator = UserResponse.model_validate(creator)
+    
+    if task.assignee_id:
+        result = await db.execute(select(User).where(User.id == task.assignee_id))
+        assignee = result.scalar_one_or_none()
+        if assignee:
+            task.assignee = UserResponse.model_validate(assignee)
+    
+    return task
 
 
 @router.get("/", response_model=List[TaskResponse])
@@ -38,6 +56,10 @@ async def list_tasks(
     result = await db.execute(query.order_by(Task.created_at.desc()))
     tasks = list(result.scalars().all())
     
+    # 加载关联用户信息
+    for task in tasks:
+        await load_task_users(db, task)
+    
     return tasks
 
 
@@ -60,6 +82,19 @@ async def create_task(
     await db.commit()
     await db.refresh(task)
     
+    # 加载关联用户信息
+    await load_task_users(db, task)
+    
+    # 如果指定了分配人，发送通知
+    if task.assignee_id and task.assignee_id != current_user.id:
+        await notify_task_assigned(
+            db=db,
+            assignee_id=task.assignee_id,
+            task_title=task.title,
+            task_id=task.id,
+            assigner_name=current_user.nickname or current_user.email
+        )
+    
     return task
 
 
@@ -75,6 +110,9 @@ async def get_task(
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
+    
+    # 加载关联用户信息
+    await load_task_users(db, task)
     
     return task
 
@@ -93,12 +131,29 @@ async def update_task(
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
+    # 检查是否更改了分配人
+    old_assignee_id = task.assignee_id
+    
     update_data = task_in.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(task, field, value)
     
     await db.commit()
     await db.refresh(task)
+    
+    # 加载关联用户信息
+    await load_task_users(db, task)
+    
+    # 如果分配人变更，发送通知
+    new_assignee_id = task.assignee_id
+    if new_assignee_id and new_assignee_id != old_assignee_id and new_assignee_id != current_user.id:
+        await notify_task_assigned(
+            db=db,
+            assignee_id=new_assignee_id,
+            task_title=task.title,
+            task_id=task.id,
+            assigner_name=current_user.nickname or current_user.email
+        )
     
     return task
 
@@ -140,6 +195,9 @@ async def update_task_status(
     await db.commit()
     await db.refresh(task)
     
+    # 加载关联用户信息
+    await load_task_users(db, task)
+    
     return task
 
 
@@ -170,6 +228,9 @@ async def assign_task(
     task.assignee_id = assignee_id
     await db.commit()
     await db.refresh(task)
+    
+    # 加载关联用户信息
+    await load_task_users(db, task)
     
     # 发送通知给被分配的用户
     if assignee_id != current_user.id:

@@ -58,6 +58,9 @@ class TaskResponse(TaskBase):
     assignee_id: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+    # 关联用户信息
+    creator: Optional[UserResponse] = None
+    assignee: Optional[UserResponse] = None
 
     class Config:
         from_attributes = True

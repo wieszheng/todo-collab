@@ -2,7 +2,8 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from app.models.models import Notification
+from app.models.models import Notification, User
+from app.services.email_service import send_task_assigned_email
 
 
 async def create_notification(
@@ -35,6 +36,21 @@ async def notify_task_assigned(
     assigner_name: str = "系统"
 ) -> Notification:
     """任务分配通知"""
+    # 获取被分配用户信息
+    result = await db.execute(select(User).where(User.id == assignee_id))
+    assignee = result.scalar_one_or_none()
+    
+    # 发送邮件通知
+    if assignee:
+        await send_task_assigned_email(
+            to_email=assignee.email,
+            assignee_name=assignee.nickname or assignee.email.split("@")[0],
+            task_title=task_title,
+            task_id=task_id,
+            assigner_name=assigner_name
+        )
+    
+    # 创建站内通知
     return await create_notification(
         db=db,
         user_id=assignee_id,

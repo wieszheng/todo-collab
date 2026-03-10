@@ -24,6 +24,9 @@ export interface Task {
   assignee_id: string | null
   created_at: string
   updated_at: string
+  // 关联用户信息
+  creator: User | null
+  assignee: User | null
 }
 
 export interface TaskCreate {

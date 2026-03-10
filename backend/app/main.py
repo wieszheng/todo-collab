@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import api_router
 from app.core.config import settings
 from app.core.database import init_db
+from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
@@ -17,8 +18,13 @@ async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     # 启动时初始化数据库
     await init_db()
+    # 启动定时任务调度器
+    await start_scheduler()
+    print("🚀 Todo Collab 服务已启动")
     yield
     # 关闭时清理资源
+    await stop_scheduler()
+    print("👋 Todo Collab 服务已关闭")
 
 
 app = FastAPI(
