@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore'
 import { Bell, User, LogOut, ChevronDown } from 'lucide-react'
 import { useUnreadCount } from '../../hooks/useNotifications'
 import NotificationPanel from '../NotificationPanel'
+import { Avatar } from '../Avatar'
 
 export default function Header() {
   const user = useAuthStore((s) => s.user)
@@ -55,9 +56,7 @@ export default function Header() {
             className="flex items-center gap-2 p-1 rounded-lg transition-colors"
             style={{ backgroundColor: 'transparent' }}
           >
-            <div className="w-7 h-7 rounded-lg bg-gradient-primary flex items-center justify-center text-white text-xs font-medium shadow-glow">
-              {user?.nickname?.[0] || user?.email[0].toUpperCase()}
-            </div>
+            <Avatar src={user?.avatar_url} name={user?.nickname || user?.email} size="sm" />
             <span className="text-sm hidden sm:block" style={{ color: 'var(--text-primary)' }}>
               {user?.nickname || user?.email.split('@')[0]}
             </span>

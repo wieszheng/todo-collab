@@ -12,6 +12,13 @@ export interface Comment {
   task_id: string
   user_id: string
   created_at: string
+  // 关联用户信息
+  user: {
+    id: string
+    email: string
+    nickname: string | null
+    avatar_url: string | null
+  } | null
 }
 
 export const commentService = {

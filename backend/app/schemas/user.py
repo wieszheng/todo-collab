@@ -101,6 +101,8 @@ class CommentResponse(BaseModel):
     task_id: str
     user_id: str
     created_at: datetime
+    # 关联用户信息
+    user: Optional[UserResponse] = None
     
     class Config:
         from_attributes = True

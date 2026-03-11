@@ -30,13 +30,19 @@ async def list_task_comments(
     if task.creator_id != current_user.id and task.assignee_id != current_user.id:
         raise HTTPException(status_code=403, detail="无权查看此任务的评论")
     
-    # 获取评论
+    # 获取评论（包含用户信息）
     result = await db.execute(
         select(Comment)
         .where(Comment.task_id == task_id)
         .order_by(Comment.created_at.desc())
     )
     comments = list(result.scalars().all())
+    
+    # 为每个评论加载用户信息
+    for comment in comments:
+        user_result = await db.execute(select(User).where(User.id == comment.user_id))
+        comment.user = user_result.scalar_one_or_none()
+    
     return comments
 
 
@@ -67,6 +73,9 @@ async def create_comment(
     db.add(comment)
     await db.commit()
     await db.refresh(comment)
+    
+    # 添加用户信息
+    comment.user = current_user
     
     return comment
 

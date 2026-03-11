@@ -2,6 +2,7 @@ import { Task } from '../types'
 import { useUpdateTaskStatus, useDeleteTask } from '../hooks/useTasks'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle, Circle, AlertTriangle, Flag, Calendar, Play, Trash2 } from 'lucide-react'
+import { Avatar } from './Avatar'
 
 interface TaskCardProps {
   task: Task
@@ -82,6 +83,14 @@ export default function TaskCard({ task }: TaskCardProps) {
                 <Calendar size={10} />
                 {new Date(task.due_date).toLocaleDateString()}
               </span>
+            )}
+            {task.assignee && (
+              <div className="flex items-center gap-1">
+                <Avatar src={task.assignee.avatar_url} name={task.assignee.nickname || task.assignee.email} size="sm" />
+                <span className="text-xs text-neutral-warm dark:text-neutral-light">
+                  {task.assignee.nickname || task.assignee.email.split('@')[0]}
+                </span>
+              </div>
             )}
           </div>
         </div>

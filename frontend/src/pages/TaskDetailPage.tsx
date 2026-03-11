@@ -5,6 +5,7 @@ import { useComments, useCreateComment, useDeleteComment } from '../hooks/useCom
 import { useUsers } from '../hooks/useUsers'
 import { useAuthStore } from '../stores/authStore'
 import TaskForm from '../components/TaskForm'
+import { Avatar } from '../components/Avatar'
 import { useState } from 'react'
 
 const statusConfig = {
@@ -307,12 +308,14 @@ export default function TaskDetailPage() {
                       <div key={comment.id} className="p-2.5 rounded-lg" style={{ backgroundColor: 'var(--bg-accent)' }}>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-lg bg-gradient-primary flex items-center justify-center text-white text-xs font-bold">
-                              {comment.user_id === user?.id ? (user?.nickname?.[0] || user?.email[0].toUpperCase()) : '?'}
-                            </div>
+                            <Avatar 
+                              src={comment.user?.avatar_url} 
+                              name={comment.user?.nickname || comment.user?.email || '?'} 
+                              size="sm" 
+                            />
                             <div>
-                              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                                {comment.user_id === user?.id ? (user?.nickname || '我') : '用户'}
+                              <p className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>
+                                {comment.user?.nickname || comment.user?.email?.split('@')[0] || '用户'}
                               </p>
                               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                                 {new Date(comment.created_at).toLocaleString()}

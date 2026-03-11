@@ -3,6 +3,8 @@ import { useAuthStore } from '../stores/authStore'
 import { useThemeStore, themeColors, ThemeColorKey, ThemeMode } from '../stores/themeStore'
 import { useUpdateUser } from '../hooks/useUsers'
 import { Settings, User, Bell, Palette, Mail, Save, Sun, Moon, Monitor, Check } from 'lucide-react'
+import { Avatar } from '../components/Avatar'
+import { AvatarUpload } from '../components/AvatarUpload'
 
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user)
@@ -76,17 +78,15 @@ export default function ProfilePage() {
               <h2 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>个人信息</h2>
               
               {/* 头像 */}
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center text-white text-lg font-bold shadow-glow">
-                  {user?.nickname?.[0] || user?.email[0].toUpperCase()}
-                </div>
-                <div>
-                  <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>点击更换头像</p>
-                  <button className="text-xs hover:underline mt-0.5" style={{ color: 'var(--color-primary)' }}>
-                    上传新头像
-                  </button>
-                </div>
-              </div>
+              <AvatarUpload
+                currentAvatar={user?.avatar_url}
+                name={user?.nickname || user?.email}
+                onUpload={async (base64) => {
+                  await updateUser.mutateAsync({ avatar_url: base64 })
+                  setSaved(true)
+                  setTimeout(() => setSaved(false), 2000)
+                }}
+              />
 
               {/* 信息表单 */}
               <div className="space-y-3">
@@ -229,9 +229,7 @@ export default function ProfilePage() {
                 <h2 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>预览效果</h2>
                 <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-light)' }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-white font-bold shadow-glow">
-                      {user?.nickname?.[0] || 'U'}
-                    </div>
+                    <Avatar src={user?.avatar_url} name={user?.nickname || user?.email} size="md" />
                     <div>
                       <p className="font-medium" style={{ color: 'var(--text-primary)' }}>
                         {user?.nickname || '用户名'}

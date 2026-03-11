@@ -5,6 +5,7 @@ import {
   useTeams, useCreateTeam, useDeleteTeam, 
   useInviteMember, useUpdateMemberRole, useRemoveMember, useLeaveTeam 
 } from '../hooks/useTeams'
+import { Avatar } from '../components/Avatar'
 
 const roleConfig = {
   owner: { label: '创建者', icon: Crown, color: 'text-warning', bg: 'bg-warning-light dark:bg-warning-light/20' },
@@ -213,9 +214,7 @@ export default function TeamPage() {
                     return (
                       <div key={member.id} className="p-3 flex items-center justify-between hover:bg-secondary-cream dark:hover:bg-neutral-700 transition-colors">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center text-white text-sm font-bold shadow-glow">
-                            {displayName[0].toUpperCase()}
-                          </div>
+                          <Avatar src={member.user?.avatar_url} name={displayName} size="sm" />
                           <div>
                             <p className="font-medium text-sm text-neutral-charcoal dark:text-white">
                               {displayName}
