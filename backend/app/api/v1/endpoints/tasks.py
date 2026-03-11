@@ -16,21 +16,14 @@ from app.services.notification_service import notify_task_assigned
 router = APIRouter()
 
 
-async def load_task_users(db: AsyncSession, task: Task) -> Task:
-    """加载任务的关联用户信息"""
-    if task.creator_id:
-        result = await db.execute(select(User).where(User.id == task.creator_id))
-        creator = result.scalar_one_or_none()
-        if creator:
-            task.creator = UserResponse.model_validate(creator)
-    
-    if task.assignee_id:
-        result = await db.execute(select(User).where(User.id == task.assignee_id))
-        assignee = result.scalar_one_or_none()
-        if assignee:
-            task.assignee = UserResponse.model_validate(assignee)
-    
-    return task
+async def build_task_response(task: Task) -> dict:
+    """构建任务响应，包含关联用户信息"""
+    response = TaskResponse.model_validate(task)
+    if task.creator:
+        response.creator = UserResponse.model_validate(task.creator)
+    if task.assignee:
+        response.assignee = UserResponse.model_validate(task.assignee)
+    return response
 
 
 @router.get("/", response_model=List[TaskResponse])
@@ -42,7 +35,10 @@ async def list_tasks(
     db: AsyncSession = Depends(get_db)
 ):
     """获取任务列表"""
-    query = select(Task).where(
+    query = select(Task).options(
+        selectinload(Task.creator),
+        selectinload(Task.assignee)
+    ).where(
         (Task.creator_id == current_user.id) | (Task.assignee_id == current_user.id)
     )
     
@@ -56,11 +52,7 @@ async def list_tasks(
     result = await db.execute(query.order_by(Task.created_at.desc()))
     tasks = list(result.scalars().all())
     
-    # 加载关联用户信息
-    for task in tasks:
-        await load_task_users(db, task)
-    
-    return tasks
+    return [await build_task_response(task) for task in tasks]
 
 
 @router.post("/", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
@@ -80,10 +72,14 @@ async def create_task(
     )
     db.add(task)
     await db.commit()
-    await db.refresh(task)
     
-    # 加载关联用户信息
-    await load_task_users(db, task)
+    # 重新查询并加载关联
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task.id)
+    )
+    task = result.scalar_one()
     
     # 如果指定了分配人，发送通知
     if task.assignee_id and task.assignee_id != current_user.id:
@@ -95,7 +91,7 @@ async def create_task(
             assigner_name=current_user.nickname or current_user.email
         )
     
-    return task
+    return await build_task_response(task)
 
 
 @router.get("/{task_id}", response_model=TaskResponse)
@@ -105,16 +101,17 @@ async def get_task(
     db: AsyncSession = Depends(get_db)
 ):
     """获取任务详情"""
-    result = await db.execute(select(Task).where(Task.id == task_id))
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
     task = result.scalar_one_or_none()
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
-    # 加载关联用户信息
-    await load_task_users(db, task)
-    
-    return task
+    return await build_task_response(task)
 
 
 @router.put("/{task_id}", response_model=TaskResponse)
@@ -125,7 +122,11 @@ async def update_task(
     db: AsyncSession = Depends(get_db)
 ):
     """更新任务"""
-    result = await db.execute(select(Task).where(Task.id == task_id))
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
     task = result.scalar_one_or_none()
     
     if not task:
@@ -141,8 +142,13 @@ async def update_task(
     await db.commit()
     await db.refresh(task)
     
-    # 加载关联用户信息
-    await load_task_users(db, task)
+    # 重新加载关联
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
+    task = result.scalar_one()
     
     # 如果分配人变更，发送通知
     new_assignee_id = task.assignee_id
@@ -155,7 +161,7 @@ async def update_task(
             assigner_name=current_user.nickname or current_user.email
         )
     
-    return task
+    return await build_task_response(task)
 
 
 @router.delete("/{task_id}")
@@ -185,7 +191,11 @@ async def update_task_status(
     db: AsyncSession = Depends(get_db)
 ):
     """更新任务状态"""
-    result = await db.execute(select(Task).where(Task.id == task_id))
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
     task = result.scalar_one_or_none()
     
     if not task:
@@ -195,10 +205,15 @@ async def update_task_status(
     await db.commit()
     await db.refresh(task)
     
-    # 加载关联用户信息
-    await load_task_users(db, task)
+    # 重新加载关联
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
+    task = result.scalar_one()
     
-    return task
+    return await build_task_response(task)
 
 
 @router.put("/{task_id}/assign", response_model=TaskResponse)
@@ -209,7 +224,11 @@ async def assign_task(
     db: AsyncSession = Depends(get_db)
 ):
     """分配任务"""
-    result = await db.execute(select(Task).where(Task.id == task_id))
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
     task = result.scalar_one_or_none()
     
     if not task:
@@ -229,8 +248,13 @@ async def assign_task(
     await db.commit()
     await db.refresh(task)
     
-    # 加载关联用户信息
-    await load_task_users(db, task)
+    # 重新加载关联
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
+    task = result.scalar_one()
     
     # 发送通知给被分配的用户
     if assignee_id != current_user.id:
@@ -242,4 +266,4 @@ async def assign_task(
             assigner_name=current_user.nickname or current_user.email
         )
     
-    return task
+    return await build_task_response(task)

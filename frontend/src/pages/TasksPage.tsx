@@ -3,6 +3,7 @@ import { useTasks, useCreateTask } from '../hooks/useTasks'
 import TaskCard from '../components/TaskCard'
 import TaskForm from '../components/TaskForm'
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 type StatusFilter = 'all' | 'todo' | 'in_progress' | 'done'
 type PriorityFilter = 'all' | 'low' | 'medium' | 'high'
@@ -25,6 +26,9 @@ export default function TasksPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('all')
   const [showForm, setShowForm] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  
+  const queryClient = useQueryClient()
   
   const { data: tasks = [], isLoading } = useTasks({
     status: statusFilter === 'all' ? undefined : statusFilter,
@@ -34,12 +38,27 @@ export default function TasksPage() {
   const createTask = useCreateTask()
 
   const handleCreateTask = async (data: any) => {
-    await createTask.mutateAsync(data)
-    setShowForm(false)
+    setError(null)
+    try {
+      await createTask.mutateAsync(data)
+      setShowForm(false)
+      // 强制刷新任务列表
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+    } catch (err: any) {
+      setError(err.response?.data?.detail || '创建失败，请重试')
+    }
   }
 
   return (
     <div className="space-y-4 animate-in p-1">
+      {/* 错误提示 */}
+      {error && (
+        <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-3 rounded-lg text-sm">
+          {error}
+          <button onClick={() => setError(null)} className="ml-2 text-red-500 hover:text-red-700">✕</button>
+        </div>
+      )}
+      
       {/* 头部 */}
       <div className="flex items-center justify-between">
         <div>

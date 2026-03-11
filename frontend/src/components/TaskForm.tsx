@@ -25,13 +25,19 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    await onSubmit({
+    const data: any = {
       title,
-      description: description || undefined,
       priority,
-      due_date: dueDate ? new Date(dueDate).toISOString() : undefined,
-      assignee_id: assigneeId || undefined,
-    })
+    }
+    
+    // 只在有值时才添加可选字段
+    if (description) data.description = description
+    if (dueDate) data.due_date = new Date(dueDate).toISOString()
+    if (assigneeId) data.assignee_id = assigneeId
+    
+    console.log('[TaskForm] Submitting data:', data)
+    
+    await onSubmit(data)
   }
 
   return (
@@ -103,9 +109,16 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading, i
             <input
               type="date"
               value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
+              onChange={(e) => {
+                console.log('[TaskForm] Date input onChange, value:', e.target.value)
+                setDueDate(e.target.value)
+              }}
+              onBlur={() => {
+                console.log('[TaskForm] Date input onBlur, dueDate state:', dueDate)
+              }}
               className="input"
             />
+            {dueDate && <p className="text-xs text-green-600 mt-1">已选择: {dueDate}</p>}
           </div>
         </div>
 
