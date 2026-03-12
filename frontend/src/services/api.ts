@@ -38,10 +38,17 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // 清理 auth-storage
-      localStorage.removeItem('auth-storage')
-      localStorage.removeItem('token')
-      window.location.href = '/login'
+      // 登录/注册页的 401 错误由页面自己处理，不拦截
+      const isAuthPage = ['/login', '/register'].some(path => 
+        window.location.pathname.endsWith(path)
+      )
+      
+      if (!isAuthPage) {
+        // 清理 auth-storage
+        localStorage.removeItem('auth-storage')
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

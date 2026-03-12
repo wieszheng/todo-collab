@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Camera, X, Check, RotateCcw } from 'lucide-react'
 import { Avatar } from './Avatar'
 
@@ -15,7 +15,9 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
   const [showCropper, setShowCropper] = useState(false)
   const [imageSrc, setImageSrc] = useState<string | null>(null)
   const [cropArea, setCropArea] = useState({ x: 0, y: 0, size: 100 })
+  const [imageLoaded, setImageLoaded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,12 +43,33 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
       setPreview(result)
       setShowCropper(true)
       setCropArea({ x: 0, y: 0, size: 100 })
+      setImageLoaded(false)
     }
     reader.readAsDataURL(file)
 
     // 清空 input 以便重复选择同一文件
     e.target.value = ''
   }
+
+  // 图片加载后初始化裁剪框位置
+  const handleImageLoad = useCallback(() => {
+    setImageLoaded(true)
+    if (imageRef.current && containerRef.current) {
+      const imgRect = imageRef.current.getBoundingClientRect()
+      const containerRect = containerRef.current.getBoundingClientRect()
+      
+      // 计算图片在容器中的实际位置和尺寸
+      const imgWidth = imageRef.current.offsetWidth
+      const imgHeight = imageRef.current.offsetHeight
+      const size = Math.min(imgWidth, imgHeight) * 0.8
+      
+      // 居中裁剪框
+      const x = (imgWidth - size) / 2
+      const y = (imgHeight - size) / 2
+      
+      setCropArea({ x, y, size })
+    }
+  }, [])
 
   const handleCrop = useCallback(() => {
     if (!imageSrc || !imageRef.current) return
@@ -56,19 +79,19 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
     if (!ctx) return
 
     const img = imageRef.current
-    const minDim = Math.min(img.naturalWidth, img.naturalHeight)
-    const scale = img.naturalWidth / img.offsetWidth
+    const scaleX = img.naturalWidth / img.offsetWidth
+    const scaleY = img.naturalHeight / img.offsetHeight
 
     // 输出尺寸
     const outputSize = 200
     canvas.width = outputSize
     canvas.height = outputSize
 
-    // 计算裁剪区域
-    const cropSize = Math.min(cropArea.size, minDim / scale)
-    const sx = cropArea.x * scale
-    const sy = cropArea.y * scale
-    const sSize = cropSize * scale
+    // 计算裁剪区域（使用 scale 的平均值以保持比例）
+    const scale = (scaleX + scaleY) / 2
+    const sx = cropArea.x * scaleX
+    const sy = cropArea.y * scaleY
+    const sSize = cropArea.size * scale
 
     ctx.drawImage(img, sx, sy, sSize, sSize, 0, 0, outputSize, outputSize)
 
@@ -100,26 +123,47 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
   }
 
   const handleReset = () => {
-    if (imageSrc) {
+    if (imageSrc && imageRef.current) {
       setPreview(imageSrc)
-      setCropArea({ x: 0, y: 0, size: 100 })
+      const imgWidth = imageRef.current.offsetWidth
+      const imgHeight = imageRef.current.offsetHeight
+      const size = Math.min(imgWidth, imgHeight) * 0.8
+      setCropArea({ x: (imgWidth - size) / 2, y: (imgHeight - size) / 2, size })
     }
   }
 
-  // 简单的拖拽裁剪
-  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    if (!imageRef.current) return
+  // 拖拽裁剪框
+  const handleCropAreaMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    const startX = e.clientX
+    const startY = e.clientY
+    const startCrop = { ...cropArea }
 
-    const rect = imageRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!imageRef.current) return
+      
+      const deltaX = moveEvent.clientX - startX
+      const deltaY = moveEvent.clientY - startY
+      
+      const imgWidth = imageRef.current.offsetWidth
+      const imgHeight = imageRef.current.offsetHeight
+      
+      // 限制裁剪框在图片范围内
+      const newX = Math.max(0, Math.min(startCrop.x + deltaX, imgWidth - startCrop.size))
+      const newY = Math.max(0, Math.min(startCrop.y + deltaY, imgHeight - startCrop.size))
+      
+      setCropArea(prev => ({ ...prev, x: newX, y: newY }))
+    }
 
-    // 以点击位置为中心设置裁剪框
-    const size = Math.min(rect.width, rect.height) * 0.8
-    const newX = Math.max(0, Math.min(x - size / 2, rect.width - size))
-    const newY = Math.max(0, Math.min(y - size / 2, rect.height - size))
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
 
-    setCropArea({ x: newX, y: newY, size })
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
   }
 
   return (
@@ -171,31 +215,56 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
               调整头像
             </h3>
 
-            {/* 图片预览 */}
-            <div className="relative mb-4">
+            {/* 图片预览容器 */}
+            <div 
+              ref={containerRef}
+              className="relative mb-4 flex items-center justify-center bg-black rounded-lg overflow-hidden"
+              style={{ minHeight: '200px', maxHeight: '300px' }}
+            >
               <img
                 ref={imageRef}
                 src={imageSrc}
                 alt="Preview"
-                className="w-full max-h-64 object-contain rounded-lg cursor-crosshair"
-                onClick={handleImageClick}
-                style={{ backgroundColor: 'var(--bg-hover)' }}
+                className="max-w-full max-h-64"
+                onLoad={handleImageLoad}
+                style={{ display: 'block' }}
               />
-              {/* 裁剪框指示器 */}
-              <div
-                className="absolute border-2 border-white/80 pointer-events-none"
-                style={{
-                  left: cropArea.x,
-                  top: cropArea.y,
-                  width: cropArea.size,
-                  height: cropArea.size,
-                  boxShadow: '0 0 0 9999px rgba(0,0,0,0.4)',
-                }}
-              />
+              
+              {/* 裁剪框 - 只有图片加载后才显示 */}
+              {imageLoaded && (
+                <>
+                  {/* 遮罩层 */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+                  />
+                  
+                  {/* 裁剪框 */}
+                  <div
+                    className="absolute border-2 border-white cursor-move"
+                    style={{
+                      left: cropArea.x,
+                      top: cropArea.y,
+                      width: cropArea.size,
+                      height: cropArea.size,
+                      boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)',
+                    }}
+                    onMouseDown={handleCropAreaMouseDown}
+                  >
+                    {/* 网格线 */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      <div className="absolute left-1/3 top-0 bottom-0 w-px bg-white/30" />
+                      <div className="absolute left-2/3 top-0 bottom-0 w-px bg-white/30" />
+                      <div className="absolute top-1/3 left-0 right-0 h-px bg-white/30" />
+                      <div className="absolute top-2/3 left-0 right-0 h-px bg-white/30" />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
-            <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
-              点击图片选择裁剪区域，将以正方形裁剪
+            <p className="text-xs mb-4 text-center" style={{ color: 'var(--text-muted)' }}>
+              拖拽方框调整裁剪区域
             </p>
 
             {/* 操作按钮 */}
