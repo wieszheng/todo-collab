@@ -2,6 +2,7 @@ import { Plus, Filter, ListTodo, CheckCircle, Clock, Flag, AlertTriangle } from 
 import { useTasks, useCreateTask } from '../hooks/useTasks'
 import TaskCard from '../components/TaskCard'
 import TaskForm from '../components/TaskForm'
+import { TaskListSkeleton } from '../components/Loading'
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -132,7 +133,7 @@ export default function TasksPage() {
 
       {/* 任务列表 */}
       {isLoading ? (
-        <div className="text-center py-8 text-neutral-warm dark:text-neutral-light text-sm">加载中...</div>
+        <TaskListSkeleton count={4} />
       ) : tasks.length === 0 ? (
         <div className="card p-8 text-center">
           <ListTodo className="mx-auto text-neutral-light" size={40} />
@@ -140,7 +141,7 @@ export default function TasksPage() {
           <p className="text-neutral-light text-xs mt-1">点击"新建任务"创建第一个吧</p>
         </div>
       ) : (
-        <div className="grid gap-3">
+        <div className="grid gap-3 max-h-[calc(100vh-320px)] overflow-y-auto pr-1">
           {tasks.map((task, index) => (
             <div key={task.id} style={{ animationDelay: `${index * 30}ms` }} className="animate-in">
               <TaskCard task={task} />

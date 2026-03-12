@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { CheckSquare, Clock, AlertCircle, TrendingUp, ListTodo, Calendar, Sun, Moon } from 'lucide-react'
 import { taskApi } from '../services/taskService'
 import { useAuthStore } from '../stores/authStore'
+import { Skeleton, StatCardSkeleton } from '../components/Loading'
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user)
@@ -44,55 +45,64 @@ export default function DashboardPage() {
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="card p-3 hover:shadow-glow group">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-100/20 group-hover:bg-primary-100 dark:group-hover:bg-primary-100/30 transition-colors">
-              <CheckSquare className="text-primary" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-gradient">{todoCount}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">待办任务</p>
+      {isLoading ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="card p-3 hover:shadow-glow group">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-100/20 group-hover:bg-primary-100 dark:group-hover:bg-primary-100/30 transition-colors">
+                <CheckSquare className="text-primary" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-gradient">{todoCount}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">待办任务</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="card p-3 hover:shadow-glow-mint group">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20 group-hover:bg-success-light/80 dark:group-hover:bg-success-light/30 transition-colors">
-              <Clock className="text-success" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-success">{inProgressCount}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">进行中</p>
+          <div className="card p-3 hover:shadow-glow-mint group">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20 group-hover:bg-success-light/80 dark:group-hover:bg-success-light/30 transition-colors">
+                <Clock className="text-success" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-success">{inProgressCount}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">进行中</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="card p-3 group">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20 group-hover:bg-success-light/80 dark:group-hover:bg-success-light/30 transition-colors">
-              <TrendingUp className="text-success" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-success">{doneCount}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">已完成</p>
+          <div className="card p-3 group">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20 group-hover:bg-success-light/80 dark:group-hover:bg-success-light/30 transition-colors">
+                <TrendingUp className="text-success" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-success">{doneCount}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">已完成</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="card p-3 group">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-warning-light dark:bg-warning-light/20 group-hover:bg-warning-light/80 dark:group-hover:bg-warning-light/30 transition-colors">
-              <AlertCircle className="text-warning" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-warning">{highPriorityCount}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">高优先级</p>
+          <div className="card p-3 group">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-warning-light dark:bg-warning-light/20 group-hover:bg-warning-light/80 dark:group-hover:bg-warning-light/30 transition-colors">
+                <AlertCircle className="text-warning" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-warning">{highPriorityCount}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">高优先级</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 最近任务 */}
       <div className="card">
@@ -105,7 +115,17 @@ export default function DashboardPage() {
         </div>
         <div className="p-3">
           {isLoading ? (
-            <div className="text-center py-6 text-neutral-warm dark:text-neutral-light text-sm">加载中...</div>
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between p-2.5 bg-secondary-cream dark:bg-neutral-800 rounded-lg">
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                  <Skeleton className="w-14 h-5 rounded-full ml-2" />
+                </div>
+              ))}
+            </div>
           ) : tasks.length === 0 ? (
             <div className="text-center py-8">
               <ListTodo className="mx-auto text-neutral-light" size={36} />

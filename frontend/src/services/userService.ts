@@ -1,37 +1,23 @@
-import axios from 'axios'
-
-const API_URL = 'http://localhost:8000/api/v1'
-
-const getAuthHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem('token')}`,
-})
+import { axiosInstance } from './api'
 
 export const userService = {
   async updateMe(data: { nickname?: string; avatar_url?: string }) {
-    const response = await axios.put(`${API_URL}/users/me`, data, {
-      headers: getAuthHeaders(),
-    })
+    const response = await axiosInstance.put('/users/me', data)
     return response.data
   },
 
   async getMe() {
-    const response = await axios.get(`${API_URL}/users/me`, {
-      headers: getAuthHeaders(),
-    })
+    const response = await axiosInstance.get('/users/me')
     return response.data
   },
 
   async list() {
-    const response = await axios.get(`${API_URL}/users/`, {
-      headers: getAuthHeaders(),
-    })
+    const response = await axiosInstance.get('/users/')
     return response.data
   },
 
   async getById(id: string) {
-    const response = await axios.get(`${API_URL}/users/${id}`, {
-      headers: getAuthHeaders(),
-    })
+    const response = await axiosInstance.get(`/users/${id}`)
     return response.data
   },
 }

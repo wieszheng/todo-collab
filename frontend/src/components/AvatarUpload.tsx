@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { Camera, X, Check, RotateCcw } from 'lucide-react'
 import { Avatar } from './Avatar'
 
@@ -183,9 +184,9 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
         className="hidden"
       />
 
-      {/* 裁剪弹窗 */}
-      {showCropper && imageSrc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      {/* 裁剪弹窗 - 使用 Portal 渲染到 body 层级 */}
+      {showCropper && imageSrc && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div
             className="p-4 rounded-2xl max-w-md w-full mx-4"
             style={{ backgroundColor: 'var(--bg-card)' }}
@@ -265,7 +266,8 @@ export function AvatarUpload({ currentAvatar, name, onUpload, disabled }: Avatar
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {preview && !showCropper && (

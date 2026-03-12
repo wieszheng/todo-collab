@@ -6,6 +6,7 @@ import { useUsers } from '../hooks/useUsers'
 import { useAuthStore } from '../stores/authStore'
 import TaskForm from '../components/TaskForm'
 import { Avatar } from '../components/Avatar'
+import { PageLoading, Skeleton } from '../components/Loading'
 import { useState } from 'react'
 
 const statusConfig = {
@@ -66,11 +67,15 @@ export default function TaskDetailPage() {
   }
 
   if (isLoading) {
-    return <div className="text-center py-8 text-neutral-warm dark:text-neutral-light text-sm">加载中...</div>
+    return <PageLoading message="加载任务详情..." />
   }
 
   if (!task) {
-    return <div className="text-center py-8 text-neutral-warm dark:text-neutral-light text-sm">任务不存在</div>
+    return (
+      <div className="text-center py-8 text-neutral-warm dark:text-neutral-light text-sm">
+        任务不存在
+      </div>
+    )
   }
 
   const status = statusConfig[task.status]

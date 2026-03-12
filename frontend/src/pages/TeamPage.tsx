@@ -6,6 +6,7 @@ import {
   useInviteMember, useUpdateMemberRole, useRemoveMember, useLeaveTeam 
 } from '../hooks/useTeams'
 import { Avatar } from '../components/Avatar'
+import { StatRowSkeleton, TeamCardSkeleton } from '../components/Loading'
 
 const roleConfig = {
   owner: { label: '创建者', icon: Crown, color: 'text-warning', bg: 'bg-warning-light dark:bg-warning-light/20' },
@@ -108,48 +109,53 @@ export default function TeamPage() {
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="card p-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-100/20">
-              <Users className="text-primary" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-gradient">{teams.length}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">我的团队</p>
+      {isLoading ? (
+        <StatRowSkeleton count={3} />
+      ) : (
+        <div className="grid grid-cols-3 gap-3">
+          <div className="card p-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-100/20">
+                <Users className="text-primary" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-gradient">{teams.length}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">我的团队</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="card p-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20">
-              <Shield className="text-success" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-success">{adminCount}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">管理员</p>
+          <div className="card p-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-success-light dark:bg-success-light/20">
+                <Shield className="text-success" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-success">{adminCount}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">管理员</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="card p-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-warning-light dark:bg-warning-light/20">
-              <Crown className="text-warning" size={18} />
-            </div>
-            <div>
-              <p className="text-xl font-bold text-warning">{ownerCount}</p>
-              <p className="text-neutral-warm dark:text-neutral-light text-xs">创建者</p>
+          <div className="card p-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-warning-light dark:bg-warning-light/20">
+                <Crown className="text-warning" size={18} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-warning">{ownerCount}</p>
+                <p className="text-neutral-warm dark:text-neutral-light text-xs">创建者</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 团队列表 */}
       {isLoading ? (
-        <div className="card p-8 text-center">
-          <div className="text-neutral-warm dark:text-neutral-light text-sm">加载中...</div>
+        <div className="space-y-4">
+          <TeamCardSkeleton />
+          <TeamCardSkeleton />
         </div>
       ) : teams.length === 0 ? (
         <div className="card p-8 text-center">
