@@ -11,18 +11,26 @@ export const axiosInstance = axios.create({
 
 // 请求拦截器 - 添加 token
 axiosInstance.interceptors.request.use((config) => {
-  // 从 Zustand persist 存储中读取 token
+  // 优先从 auth-storage 读取（zustand persist）
   const authStorage = localStorage.getItem('auth-storage')
   if (authStorage) {
     try {
       const { state } = JSON.parse(authStorage)
       if (state?.token) {
         config.headers.Authorization = `Bearer ${state.token}`
+        return config
       }
     } catch {
       // 忽略解析错误
     }
   }
+  
+  // 兼容登录时临时保存的 token
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  
   return config
 })
 
@@ -39,6 +47,7 @@ axiosInstance.interceptors.response.use(
       if (!isAuthPage) {
         // 清理 auth-storage
         localStorage.removeItem('auth-storage')
+        localStorage.removeItem('token')
         window.location.href = '/login'
       }
     }

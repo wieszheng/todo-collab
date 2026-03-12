@@ -70,6 +70,12 @@
 - **修复**: 前端 authService.login 改用 URLSearchParams 发送表单格式
 - **状态**: ✅ 已修复 (2026-03-12)
 
+### 12. 登录后 getMe 返回 401
+- **现象**: 登录成功但立即显示 "Not authenticated"
+- **根因**: 登录时先保存 token 到 `localStorage.setItem('token', ...)`，但请求拦截器只检查 `auth-storage`，导致 getMe() 没有携带 Authorization
+- **修复**: 请求拦截器应该同时检查 `token` 和 `auth-storage` 两个 key
+- **状态**: 待开发
+
 ---
 
 ## 📋 排期计划
