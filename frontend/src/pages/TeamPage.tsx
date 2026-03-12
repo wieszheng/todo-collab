@@ -382,6 +382,11 @@ export default function TeamPage() {
             </div>
             
             <div className="space-y-3">
+              {inviteError && (
+                <div className="p-2 bg-danger-light dark:bg-danger-light/20 text-primary text-xs rounded-lg">
+                  {inviteError}
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">成员邮箱</label>
                 <input

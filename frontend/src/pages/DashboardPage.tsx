@@ -1,21 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
 import { CheckSquare, Clock, AlertCircle, TrendingUp, ListTodo, Calendar, Sun, Moon } from 'lucide-react'
-import { taskApi } from '../services/taskService'
+import { taskService } from '../services/taskService'
 import { useAuthStore } from '../stores/authStore'
 import { Skeleton, StatCardSkeleton } from '../components/Loading'
+import { Task } from '../types'
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user)
   
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => taskApi.list(),
+    queryFn: () => taskService.list(),
   })
 
-  const todoCount = tasks.filter((t) => t.status === 'todo').length
-  const inProgressCount = tasks.filter((t) => t.status === 'in_progress').length
-  const doneCount = tasks.filter((t) => t.status === 'done').length
-  const highPriorityCount = tasks.filter((t) => t.priority === 'high' && t.status !== 'done').length
+  const todoCount = tasks.filter((t: Task) => t.status === 'todo').length
+  const inProgressCount = tasks.filter((t: Task) => t.status === 'in_progress').length
+  const doneCount = tasks.filter((t: Task) => t.status === 'done').length
+  const highPriorityCount = tasks.filter((t: Task) => t.priority === 'high' && t.status !== 'done').length
 
   const greeting = () => {
     const hour = new Date().getHours()
@@ -133,7 +134,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {tasks.slice(0, 5).map((task, index) => (
+              {tasks.slice(0, 5).map((task: Task, index: number) => (
                 <div
                   key={task.id}
                   className="flex items-center justify-between p-2.5 bg-secondary-cream dark:bg-neutral-800 rounded-lg hover:bg-primary-50 dark:hover:bg-neutral-700 transition-colors"
