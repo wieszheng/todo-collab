@@ -32,15 +32,23 @@ export default function TeamPage() {
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member')
 
+  const [createError, setCreateError] = useState('')
+
   const handleCreateTeam = async () => {
     if (!newTeamName.trim()) return
-    await createTeam.mutateAsync({ 
-      name: newTeamName.trim(), 
-      description: newTeamDesc.trim() || undefined 
-    })
-    setNewTeamName('')
-    setNewTeamDesc('')
-    setShowCreateModal(false)
+    setCreateError('')
+    try {
+      await createTeam.mutateAsync({ 
+        name: newTeamName.trim(), 
+        description: newTeamDesc.trim() || undefined 
+      })
+      setNewTeamName('')
+      setNewTeamDesc('')
+      setShowCreateModal(false)
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } } }
+      setCreateError(err.response?.data?.detail || '创建团队失败，请稍后重试')
+    }
   }
 
   const handleDeleteTeam = async (teamId: string, teamName: string) => {
@@ -290,7 +298,10 @@ export default function TeamPage() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-neutral-charcoal dark:text-white">创建团队</h3>
               <button
-                onClick={() => setShowCreateModal(false)}
+                onClick={() => {
+                  setCreateError('')
+                  setShowCreateModal(false)
+                }}
                 className="p-1 text-neutral-warm dark:text-neutral-light hover:text-neutral-charcoal dark:hover:text-white"
               >
                 <X size={16} />
@@ -298,6 +309,11 @@ export default function TeamPage() {
             </div>
             
             <div className="space-y-3">
+              {createError && (
+                <div className="p-2 bg-danger-light dark:bg-danger-light/20 text-primary text-xs rounded-lg">
+                  {createError}
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-medium text-neutral-charcoal dark:text-white mb-1">团队名称</label>
                 <input
@@ -321,7 +337,10 @@ export default function TeamPage() {
             
             <div className="flex justify-end gap-2 mt-4">
               <button
-                onClick={() => setShowCreateModal(false)}
+                onClick={() => {
+                  setCreateError('')
+                  setShowCreateModal(false)
+                }}
                 className="btn-ghost"
               >
                 取消
