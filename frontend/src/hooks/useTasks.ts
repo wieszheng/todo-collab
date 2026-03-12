@@ -75,9 +75,11 @@ export const useAssignTask = () => {
   return useMutation({
     mutationFn: ({ taskId, assigneeId }: { taskId: string; assigneeId: string }) =>
       taskApi.assign(taskId, assigneeId),
-    onSuccess: (_, { taskId }) => {
+    onSuccess: (updatedTask, { taskId }) => {
+      // 直接用返回的数据更新缓存
+      queryClient.setQueryData(['task', taskId], updatedTask)
+      // 同时更新任务列表
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
-      queryClient.invalidateQueries({ queryKey: ['task', taskId] })
     },
   })
 }

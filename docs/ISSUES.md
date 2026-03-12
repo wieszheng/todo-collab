@@ -1,18 +1,23 @@
 # Todo Collab 问题清单
 
-## 🔴 P0 - 待开发
-
 ### 7. 页面加载 Loading 效果优化
 - **需求**: 各个页面增加统一的加载 Loading 效果
-- **涉及页面**:
-  - 首页
-  - 任务列表页
-  - 团队页
-  - 设置页
-- **要求**: 
-  - 统一的 Loading 组件样式
-  - 骨架屏 或 Spinner
-  - 加载状态过渡自然
+- **涉及页面**: DashboardPage, TasksPage, TeamPage, TaskDetailPage
+- **新增组件**: `Loading.tsx` (Spinner, PageLoading, Skeleton 等)
+- **状态**: ✅ 已修复 (2026-03-12)
+
+---
+
+## 🔴 P0 - 待开发
+
+### 8. 无法添加任务评论
+- **现象**: 任务详情页无法添加评论
+- **模块**: 前端 - TaskDetailPage.tsx / 后端 - comments API
+- **状态**: 待开发
+
+### 9. 任务分配人没有及时更新
+- **现象**: 分配任务后，页面没有及时刷新显示新的分配人
+- **模块**: 前端 - TaskDetailPage.tsx
 - **状态**: 待开发
 
 ---

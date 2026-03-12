@@ -1,10 +1,4 @@
-import axios from 'axios'
-
-const API_URL = 'http://localhost:8000/api/v1'
-
-const getAuthHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem('token')}`,
-})
+import { axiosInstance } from './api'
 
 export interface Comment {
   id: string
@@ -12,7 +6,6 @@ export interface Comment {
   task_id: string
   user_id: string
   created_at: string
-  // 关联用户信息
   user: {
     id: string
     email: string
@@ -23,24 +16,16 @@ export interface Comment {
 
 export const commentService = {
   async listByTask(taskId: string): Promise<Comment[]> {
-    const response = await axios.get(`${API_URL}/comments/task/${taskId}`, {
-      headers: getAuthHeaders(),
-    })
+    const response = await axiosInstance.get(`/comments/task/${taskId}`)
     return response.data
   },
 
   async create(taskId: string, content: string): Promise<Comment> {
-    const response = await axios.post(
-      `${API_URL}/comments/task/${taskId}`,
-      { content },
-      { headers: getAuthHeaders() }
-    )
+    const response = await axiosInstance.post(`/comments/task/${taskId}`, { content })
     return response.data
   },
 
   async delete(commentId: string): Promise<void> {
-    await axios.delete(`${API_URL}/comments/${commentId}`, {
-      headers: getAuthHeaders(),
-    })
+    await axiosInstance.delete(`/comments/${commentId}`)
   },
 }
