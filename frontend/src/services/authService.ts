@@ -8,11 +8,11 @@ export const authApi = {
   },
 
   login: async (email: string, password: string): Promise<Token> => {
-    const formData = new FormData()
+    const formData = new URLSearchParams()
     formData.append('username', email)
     formData.append('password', password)
     const response = await axiosInstance.post('/auth/login', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
     return response.data
   },

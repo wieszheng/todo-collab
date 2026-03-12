@@ -2,6 +2,16 @@
 
 ---
 
+## 🔴 P0 - 待开发
+
+### 11. 登录失败 - 前后端请求格式不匹配
+- **现象**: 登录时显示 "Not authenticated"，无法登录
+- **根因**: 前端发送 JSON 格式，后端需要 `application/x-www-form-urlencoded` (OAuth2PasswordRequestForm)
+- **修复**: 前端 authService.login 改用 URLSearchParams 发送表单格式
+- **状态**: 待开发
+
+---
+
 ## ✅ 已修复
 
 ### 1. 登录错误密码没有提示
