@@ -38,7 +38,7 @@ export interface InviteMember {
   role: 'admin' | 'member'
 }
 
-export const teamApi = {
+export const teamService = {
   list: async (): Promise<Team[]> => {
     const response = await axiosInstance.get('/teams')
     return response.data

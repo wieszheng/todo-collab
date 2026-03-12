@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { taskApi } from '../services/taskService'
+import { taskService } from '../services/taskService'
 import { TaskCreate, TaskUpdate } from '../types'
 
 export const useTasks = (params?: {
@@ -9,14 +9,14 @@ export const useTasks = (params?: {
 }) => {
   return useQuery({
     queryKey: ['tasks', params],
-    queryFn: () => taskApi.list(params),
+    queryFn: () => taskService.list(params),
   })
 }
 
 export const useTask = (taskId: string) => {
   return useQuery({
     queryKey: ['task', taskId],
-    queryFn: () => taskApi.get(taskId),
+    queryFn: () => taskService.get(taskId),
     enabled: !!taskId,
   })
 }
@@ -25,7 +25,7 @@ export const useCreateTask = () => {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (data: TaskCreate) => taskApi.create(data),
+    mutationFn: (data: TaskCreate) => taskService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
     },
@@ -37,7 +37,7 @@ export const useUpdateTask = () => {
   
   return useMutation({
     mutationFn: ({ taskId, data }: { taskId: string; data: TaskUpdate }) =>
-      taskApi.update(taskId, data),
+      taskService.update(taskId, data),
     onSuccess: (_, { taskId }) => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['task', taskId] })
@@ -49,7 +49,7 @@ export const useDeleteTask = () => {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (taskId: string) => taskApi.delete(taskId),
+    mutationFn: (taskId: string) => taskService.delete(taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
     },
@@ -61,7 +61,7 @@ export const useUpdateTaskStatus = () => {
   
   return useMutation({
     mutationFn: ({ taskId, status }: { taskId: string; status: string }) =>
-      taskApi.updateStatus(taskId, status),
+      taskService.updateStatus(taskId, status),
     onSuccess: (_, { taskId }) => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['task', taskId] })
@@ -74,7 +74,7 @@ export const useAssignTask = () => {
   
   return useMutation({
     mutationFn: ({ taskId, assigneeId }: { taskId: string; assigneeId: string }) =>
-      taskApi.assign(taskId, assigneeId),
+      taskService.assign(taskId, assigneeId),
     onSuccess: (updatedTask, { taskId }) => {
       // 直接用返回的数据更新缓存
       queryClient.setQueryData(['task', taskId], updatedTask)

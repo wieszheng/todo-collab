@@ -11,6 +11,7 @@ from app.schemas.user import TaskCreate, TaskUpdate, TaskResponse, UserResponse
 from app.models.models import Task
 from app.api.deps import get_current_user
 from app.models.models import User
+from app.services import task_service
 from app.services.notification_service import notify_task_assigned
 
 router = APIRouter()
@@ -26,6 +27,16 @@ async def build_task_response(task: Task) -> dict:
     return response
 
 
+async def get_task_with_relations(db: AsyncSession, task_id: str) -> Task | None:
+    """获取任务并加载关联用户"""
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+        .where(Task.id == task_id)
+    )
+    return result.scalar_one_or_none()
+
+
 @router.get("/", response_model=List[TaskResponse])
 async def list_tasks(
     status_filter: Optional[str] = Query(None, alias="status"),
@@ -35,22 +46,18 @@ async def list_tasks(
     db: AsyncSession = Depends(get_db)
 ):
     """获取任务列表"""
-    query = select(Task).options(
-        selectinload(Task.creator),
-        selectinload(Task.assignee)
-    ).where(
-        (Task.creator_id == current_user.id) | (Task.assignee_id == current_user.id)
+    # 使用 service 层获取任务
+    tasks = await task_service.get_user_tasks(
+        db=db,
+        user_id=current_user.id,
+        status=status_filter,
+        priority=priority,
+        assignee_id=assignee_id
     )
     
-    if status_filter:
-        query = query.where(Task.status == status_filter)
-    if priority:
-        query = query.where(Task.priority == priority)
-    if assignee_id:
-        query = query.where(Task.assignee_id == assignee_id)
-    
-    result = await db.execute(query.order_by(Task.created_at.desc()))
-    tasks = list(result.scalars().all())
+    # 加载关联用户
+    for task in tasks:
+        await db.refresh(task, ['creator', 'assignee'])
     
     return [await build_task_response(task) for task in tasks]
 
@@ -62,24 +69,11 @@ async def create_task(
     db: AsyncSession = Depends(get_db)
 ):
     """创建任务"""
-    task = Task(
-        title=task_in.title,
-        description=task_in.description,
-        priority=task_in.priority or "medium",
-        due_date=task_in.due_date,
-        assignee_id=task_in.assignee_id,
-        creator_id=current_user.id,
-    )
-    db.add(task)
-    await db.commit()
+    # 使用 service 层创建任务
+    task = await task_service.create(db, task_in, current_user.id)
     
-    # 重新查询并加载关联
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task.id)
-    )
-    task = result.scalar_one()
+    # 加载关联用户
+    task = await get_task_with_relations(db, task.id)
     
     # 如果指定了分配人，发送通知
     if task.assignee_id and task.assignee_id != current_user.id:
@@ -101,15 +95,14 @@ async def get_task(
     db: AsyncSession = Depends(get_db)
 ):
     """获取任务详情"""
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one_or_none()
+    task = await get_task_with_relations(db, task_id)
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
+    
+    # 检查权限
+    if task.creator_id != current_user.id and task.assignee_id != current_user.id:
+        raise HTTPException(status_code=403, detail="没有权限查看此任务")
     
     return await build_task_response(task)
 
@@ -122,44 +115,18 @@ async def update_task(
     db: AsyncSession = Depends(get_db)
 ):
     """更新任务"""
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one_or_none()
+    task = await get_task_with_relations(db, task_id)
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
-    # 检查是否更改了分配人
-    old_assignee_id = task.assignee_id
+    # 检查权限
+    if task.creator_id != current_user.id and task.assignee_id != current_user.id:
+        raise HTTPException(status_code=403, detail="没有权限修改此任务")
     
-    update_data = task_in.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(task, field, value)
-    
-    await db.commit()
-    await db.refresh(task)
-    
-    # 重新加载关联
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one()
-    
-    # 如果分配人变更，发送通知
-    new_assignee_id = task.assignee_id
-    if new_assignee_id and new_assignee_id != old_assignee_id and new_assignee_id != current_user.id:
-        await notify_task_assigned(
-            db=db,
-            assignee_id=new_assignee_id,
-            task_title=task.title,
-            task_id=task.id,
-            assigner_name=current_user.nickname or current_user.email
-        )
+    # 使用 service 层更新
+    task = await task_service.update(db, task_id, task_in)
+    task = await get_task_with_relations(db, task_id)
     
     return await build_task_response(task)
 
@@ -171,47 +138,39 @@ async def delete_task(
     db: AsyncSession = Depends(get_db)
 ):
     """删除任务"""
-    result = await db.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar_one_or_none()
+    task = await task_service.get(db, task_id)
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
-    await db.delete(task)
-    await db.commit()
+    # 只有创建者可以删除
+    if task.creator_id != current_user.id:
+        raise HTTPException(status_code=403, detail="只有创建者可以删除任务")
     
-    return {"message": "删除成功"}
+    await task_service.delete(db, task_id)
+    return {"message": "任务已删除"}
 
 
 @router.put("/{task_id}/status", response_model=TaskResponse)
 async def update_task_status(
     task_id: str,
-    status: str = Query(...),
+    status: str,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """更新任务状态"""
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one_or_none()
+    task = await task_service.get(db, task_id)
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
-    task.status = status
-    await db.commit()
-    await db.refresh(task)
+    # 检查权限
+    if task.creator_id != current_user.id and task.assignee_id != current_user.id:
+        raise HTTPException(status_code=403, detail="没有权限修改此任务")
     
-    # 重新加载关联
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one()
+    # 使用 service 层更新状态
+    task = await task_service.update_status(db, task_id, status)
+    task = await get_task_with_relations(db, task_id)
     
     return await build_task_response(task)
 
@@ -219,44 +178,25 @@ async def update_task_status(
 @router.put("/{task_id}/assign", response_model=TaskResponse)
 async def assign_task(
     task_id: str,
-    assignee_id: str = Query(...),
+    assignee_id: str = Query(..., alias="assignee_id"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """分配任务"""
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one_or_none()
+    task = await task_service.get(db, task_id)
     
     if not task:
         raise HTTPException(status_code=404, detail="任务不存在")
     
-    # 检查是否有权限分配（创建者才能分配）
+    # 只有创建者可以分配
     if task.creator_id != current_user.id:
-        raise HTTPException(status_code=403, detail="只有任务创建者可以分配任务")
+        raise HTTPException(status_code=403, detail="只有创建者可以分配任务")
     
-    # 检查被分配用户是否存在
-    result = await db.execute(select(User).where(User.id == assignee_id))
-    assignee = result.scalar_one_or_none()
-    if not assignee:
-        raise HTTPException(status_code=404, detail="被分配用户不存在")
+    # 使用 service 层分配
+    task = await task_service.assign(db, task_id, assignee_id)
+    task = await get_task_with_relations(db, task_id)
     
-    task.assignee_id = assignee_id
-    await db.commit()
-    await db.refresh(task)
-    
-    # 重新加载关联
-    result = await db.execute(
-        select(Task)
-        .options(selectinload(Task.creator), selectinload(Task.assignee))
-        .where(Task.id == task_id)
-    )
-    task = result.scalar_one()
-    
-    # 发送通知给被分配的用户
+    # 发送通知
     if assignee_id != current_user.id:
         await notify_task_assigned(
             db=db,

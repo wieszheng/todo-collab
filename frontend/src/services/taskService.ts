@@ -1,7 +1,7 @@
 import { axiosInstance } from './api'
 import { Task, TaskCreate, TaskUpdate } from '../types'
 
-export const taskApi = {
+export const taskService = {
   list: async (params?: {
     status?: string
     priority?: string

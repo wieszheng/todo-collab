@@ -11,14 +11,7 @@ export const axiosInstance = axios.create({
 
 // 请求拦截器 - 添加 token
 axiosInstance.interceptors.request.use((config) => {
-  // 优先从 token 直接存储读取（登录时先存这里）
-  const directToken = localStorage.getItem('token')
-  if (directToken) {
-    config.headers.Authorization = `Bearer ${directToken}`
-    return config
-  }
-  
-  // 其次从 Zustand persist 存储中读取 token
+  // 从 Zustand persist 存储中读取 token
   const authStorage = localStorage.getItem('auth-storage')
   if (authStorage) {
     try {
@@ -46,7 +39,6 @@ axiosInstance.interceptors.response.use(
       if (!isAuthPage) {
         // 清理 auth-storage
         localStorage.removeItem('auth-storage')
-        localStorage.removeItem('token')
         window.location.href = '/login'
       }
     }

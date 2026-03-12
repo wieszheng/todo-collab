@@ -7,6 +7,7 @@ import { useAuthStore } from '../stores/authStore'
 import TaskForm from '../components/TaskForm'
 import { Avatar } from '../components/Avatar'
 import { PageLoading, Skeleton } from '../components/Loading'
+import { useApiError } from '../hooks/useApiError'
 import { useState } from 'react'
 
 const statusConfig = {
@@ -26,6 +27,7 @@ export default function TaskDetailPage() {
   const navigate = useNavigate()
   const [isEditing, setIsEditing] = useState(false)
   const [commentText, setCommentText] = useState('')
+  const { handleError } = useApiError()
   
   const user = useAuthStore((s) => s.user)
 
@@ -40,30 +42,50 @@ export default function TaskDetailPage() {
   const deleteComment = useDeleteComment(taskId!)
 
   const handleUpdate = async (data: any) => {
-    await updateTask.mutateAsync({ taskId: taskId!, data })
-    setIsEditing(false)
+    try {
+      await updateTask.mutateAsync({ taskId: taskId!, data })
+      setIsEditing(false)
+    } catch (error) {
+      alert(handleError(error))
+    }
   }
 
   const handleDelete = async () => {
     if (window.confirm('确定要删除这个任务吗？')) {
-      await deleteTask.mutateAsync(taskId!)
-      navigate('/tasks')
+      try {
+        await deleteTask.mutateAsync(taskId!)
+        navigate('/tasks')
+      } catch (error) {
+        alert(handleError(error))
+      }
     }
   }
 
   const handleStatusChange = async (status: string) => {
-    await updateStatus.mutateAsync({ taskId: taskId!, status })
+    try {
+      await updateStatus.mutateAsync({ taskId: taskId!, status })
+    } catch (error) {
+      alert(handleError(error))
+    }
   }
 
   const handleAssign = async (assigneeId: string) => {
     if (!assigneeId) return
-    await assignTask.mutateAsync({ taskId: taskId!, assigneeId })
+    try {
+      await assignTask.mutateAsync({ taskId: taskId!, assigneeId })
+    } catch (error) {
+      alert(handleError(error))
+    }
   }
 
   const handleAddComment = async () => {
     if (!commentText.trim()) return
-    await createComment.mutateAsync(commentText.trim())
-    setCommentText('')
+    try {
+      await createComment.mutateAsync(commentText.trim())
+      setCommentText('')
+    } catch (error) {
+      alert(handleError(error))
+    }
   }
 
   if (isLoading) {

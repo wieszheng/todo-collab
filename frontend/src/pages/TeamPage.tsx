@@ -5,6 +5,7 @@ import {
   useTeams, useCreateTeam, useDeleteTeam, 
   useInviteMember, useUpdateMemberRole, useRemoveMember, useLeaveTeam 
 } from '../hooks/useTeams'
+import { useApiError } from '../hooks/useApiError'
 import { Avatar } from '../components/Avatar'
 import { StatRowSkeleton, TeamCardSkeleton } from '../components/Loading'
 
@@ -23,6 +24,7 @@ export default function TeamPage() {
   const updateMemberRole = useUpdateMemberRole()
   const removeMember = useRemoveMember()
   const leaveTeam = useLeaveTeam()
+  const { handleError } = useApiError()
   
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showInviteModal, setShowInviteModal] = useState<string | null>(null)
@@ -31,8 +33,8 @@ export default function TeamPage() {
   const [newTeamDesc, setNewTeamDesc] = useState('')
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member')
-
   const [createError, setCreateError] = useState('')
+  const [inviteError, setInviteError] = useState('')
 
   const handleCreateTeam = async () => {
     if (!newTeamName.trim()) return
@@ -45,27 +47,35 @@ export default function TeamPage() {
       setNewTeamName('')
       setNewTeamDesc('')
       setShowCreateModal(false)
-    } catch (error: unknown) {
-      const err = error as { response?: { data?: { detail?: string } } }
-      setCreateError(err.response?.data?.detail || '创建团队失败，请稍后重试')
+    } catch (error) {
+      setCreateError(handleError(error))
     }
   }
 
   const handleDeleteTeam = async (teamId: string, teamName: string) => {
     if (window.confirm(`确定要解散团队「${teamName}」吗？此操作不可恢复。`)) {
-      await deleteTeam.mutateAsync(teamId)
+      try {
+        await deleteTeam.mutateAsync(teamId)
+      } catch (error) {
+        alert(handleError(error))
+      }
     }
   }
 
   const handleInviteMember = async (teamId: string) => {
     if (!inviteEmail.trim()) return
-    await inviteMember.mutateAsync({ 
-      teamId, 
-      data: { email: inviteEmail.trim(), role: inviteRole } 
-    })
-    setInviteEmail('')
-    setInviteRole('member')
-    setShowInviteModal(null)
+    setInviteError('')
+    try {
+      await inviteMember.mutateAsync({ 
+        teamId, 
+        data: { email: inviteEmail.trim(), role: inviteRole } 
+      })
+      setInviteEmail('')
+      setInviteRole('member')
+      setShowInviteModal(null)
+    } catch (error) {
+      setInviteError(handleError(error))
+    }
   }
 
   const handleUpdateRole = async (teamId: string, memberId: string, role: 'admin' | 'member') => {
