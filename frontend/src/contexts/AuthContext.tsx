@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
 import { authApi } from '../services/authService'
+import { setAuthToken } from '../services/api'
 
 interface AuthContextType {
   isLoading: boolean
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setAuth(userData, token)
         } catch {
           logout()
+          setAuthToken(null)
         }
       }
       setIsLoading(false)
