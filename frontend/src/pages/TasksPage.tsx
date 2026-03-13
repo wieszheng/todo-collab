@@ -111,7 +111,7 @@ export default function TasksPage() {
           <span className="text-xs text-neutral-warm dark:text-neutral-light">优先级:</span>
           <div className="flex gap-1">
             {priorityOptions.map((p) => {
-              const Icon = p.icon
+              const Icon = 'icon' in p ? p.icon : null
               return (
                 <button
                   key={p.value}

@@ -6,7 +6,7 @@ import { useUsers } from '../hooks/useUsers'
 import { useAuthStore } from '../stores/authStore'
 import TaskForm from '../components/TaskForm'
 import { Avatar } from '../components/Avatar'
-import { PageLoading, Skeleton } from '../components/Loading'
+import { PageLoading } from '../components/Loading'
 import { useApiError } from '../hooks/useApiError'
 import { useState } from 'react'
 

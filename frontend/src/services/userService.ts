@@ -1,4 +1,5 @@
 import { axiosInstance } from './api'
+import { User } from '../types'
 
 export const userService = {
   async updateMe(data: { nickname?: string; avatar_url?: string }) {
@@ -6,17 +7,17 @@ export const userService = {
     return response.data
   },
 
-  async getMe() {
+  async getMe(): Promise<User> {
     const response = await axiosInstance.get('/users/me')
     return response.data
   },
 
-  async list() {
+  async list(): Promise<User[]> {
     const response = await axiosInstance.get('/users/')
     return response.data
   },
 
-  async getById(id: string) {
+  async getById(id: string): Promise<User> {
     const response = await axiosInstance.get(`/users/${id}`)
     return response.data
   },

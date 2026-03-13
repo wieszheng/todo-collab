@@ -13,7 +13,8 @@ export default function Header() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   
-  const { data: unreadCount = 0 } = useUnreadCount()
+  const { data: unreadData } = useUnreadCount()
+  const unreadCount = unreadData?.count ?? 0
 
   const handleLogout = () => {
     logout()

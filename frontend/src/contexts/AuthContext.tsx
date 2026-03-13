@@ -1,5 +1,4 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { authApi } from '../services/authService'
 
@@ -18,7 +17,6 @@ export const useAuth = () => useContext(AuthContext)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const { user, token, setAuth, logout } = useAuthStore()
-  const navigate = useNavigate()
 
   useEffect(() => {
     const checkAuth = async () => {

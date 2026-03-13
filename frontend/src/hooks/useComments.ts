@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { commentService, Comment } from '../services/commentService'
+import { commentService } from '../services/commentService'
 
 export function useComments(taskId: string) {
   return useQuery({

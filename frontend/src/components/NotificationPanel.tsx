@@ -78,7 +78,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
         ) : (
           <div className="divide-y" style={{ borderColor: 'var(--border-light)' }}>
             {notifications.map((notification) => {
-              const config = typeConfig[notification.type] || { icon: Bell, color: 'text-neutral-warm dark:text-neutral-light', bg: 'bg-neutral-100 dark:bg-neutral-800' }
+              const config = typeConfig[notification.type as keyof typeof typeConfig] || { icon: Bell, color: 'text-neutral-warm dark:text-neutral-light', bg: 'bg-neutral-100 dark:bg-neutral-800' }
               const Icon = config.icon
               
               return (

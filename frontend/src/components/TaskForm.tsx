@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { TaskCreate } from '../types'
+import { TaskCreate, Task } from '../types'
 import { X, UserPlus, Flag, Calendar, FileText } from 'lucide-react'
 import { useUsers } from '../hooks/useUsers'
 
 interface TaskFormProps {
-  initialData?: Partial<TaskCreate>
+  initialData?: Partial<TaskCreate> | Task
   onSubmit: (data: TaskCreate) => Promise<void>
   onCancel: () => void
   isLoading?: boolean

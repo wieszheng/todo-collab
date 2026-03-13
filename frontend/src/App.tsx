@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'sonner'
 import { AuthProvider } from './contexts/AuthContext'
 import Layout from './components/layout/Layout'
 import LoginPage from './pages/LoginPage'
@@ -13,6 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Toaster position="top-center" richColors closeButton />
         <Routes>
           {/* 认证页面 */}
           <Route path="/login" element={<LoginPage />} />
