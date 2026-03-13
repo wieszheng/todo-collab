@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { teamService, TeamCreate, TeamUpdate, InviteMember } from '../services/teamService'
+import { teamApi, TeamCreate, TeamUpdate, InviteMember } from '../services/teamService'
 
 export function useTeams() {
   return useQuery({
     queryKey: ['teams'],
-    queryFn: () => teamService.list(),
+    queryFn: () => teamApi.list(),
   })
 }
 
 export function useTeam(teamId: string) {
   return useQuery({
     queryKey: ['teams', teamId],
-    queryFn: () => teamService.get(teamId),
+    queryFn: () => teamApi.get(teamId),
     enabled: !!teamId,
   })
 }
@@ -20,7 +20,7 @@ export function useCreateTeam() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (data: TeamCreate) => teamService.create(data),
+    mutationFn: (data: TeamCreate) => teamApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teams'] })
     },
@@ -32,7 +32,7 @@ export function useUpdateTeam() {
   
   return useMutation({
     mutationFn: ({ teamId, data }: { teamId: string; data: TeamUpdate }) => 
-      teamService.update(teamId, data),
+      teamApi.update(teamId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teams'] })
     },
@@ -43,7 +43,7 @@ export function useDeleteTeam() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (teamId: string) => teamService.delete(teamId),
+    mutationFn: (teamId: string) => teamApi.delete(teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teams'] })
     },
@@ -55,7 +55,7 @@ export function useInviteMember() {
   
   return useMutation({
     mutationFn: ({ teamId, data }: { teamId: string; data: InviteMember }) => 
-      teamService.inviteMember(teamId, data),
+      teamApi.inviteMember(teamId, data),
     onSuccess: (_, { teamId }) => {
       queryClient.invalidateQueries({ queryKey: ['teams', teamId] })
       queryClient.invalidateQueries({ queryKey: ['teams'] })
@@ -68,7 +68,7 @@ export function useUpdateMemberRole() {
   
   return useMutation({
     mutationFn: ({ teamId, memberId, role }: { teamId: string; memberId: string; role: string }) => 
-      teamService.updateMemberRole(teamId, memberId, role),
+      teamApi.updateMemberRole(teamId, memberId, role),
     onSuccess: (_, { teamId }) => {
       queryClient.invalidateQueries({ queryKey: ['teams', teamId] })
       queryClient.invalidateQueries({ queryKey: ['teams'] })
@@ -81,7 +81,7 @@ export function useRemoveMember() {
   
   return useMutation({
     mutationFn: ({ teamId, memberId }: { teamId: string; memberId: string }) => 
-      teamService.removeMember(teamId, memberId),
+      teamApi.removeMember(teamId, memberId),
     onSuccess: (_, { teamId }) => {
       queryClient.invalidateQueries({ queryKey: ['teams', teamId] })
       queryClient.invalidateQueries({ queryKey: ['teams'] })
@@ -93,7 +93,7 @@ export function useLeaveTeam() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (teamId: string) => teamService.leaveTeam(teamId),
+    mutationFn: (teamId: string) => teamApi.leaveTeam(teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teams'] })
     },

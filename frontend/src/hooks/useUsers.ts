@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { userService } from '../services/userService'
+import { userApi } from '../services/userService'
 import { useAuthStore } from '../stores/authStore'
 
 export function useUpdateUser() {
@@ -9,7 +9,7 @@ export function useUpdateUser() {
 
   return useMutation({
     mutationFn: (data: { nickname?: string; avatar_url?: string }) =>
-      userService.updateMe(data),
+      userApi.updateMe(data),
     onSuccess: (user) => {
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] })
       setAuth(user, token!)
@@ -20,14 +20,14 @@ export function useUpdateUser() {
 export function useUsers() {
   return useQuery({
     queryKey: ['users'],
-    queryFn: () => userService.list(),
+    queryFn: () => userApi.list(),
   })
 }
 
 export function useUser(id: string) {
   return useQuery({
     queryKey: ['user', id],
-    queryFn: () => userService.getById(id),
+    queryFn: () => userApi.getById(id),
     enabled: !!id,
   })
 }

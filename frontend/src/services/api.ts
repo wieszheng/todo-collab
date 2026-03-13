@@ -18,24 +18,42 @@ const ERROR_MESSAGES: Record<number, string> = {
   500: '服务器错误，请稍后重试',
 }
 
-// 请求拦截器 - 添加 token
-axiosInstance.interceptors.request.use((config) => {
-  // 优先从 auth-storage 读取（zustand persist）
+/**
+ * 临时设置认证 token（用于登录流程中 getMe 请求）
+ */
+export function setAuthToken(token: string | null) {
+  if (token) {
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  } else {
+    delete axiosInstance.defaults.headers.common['Authorization']
+  }
+}
+
+/**
+ * 从 zustand persist storage 读取 token
+ */
+function getStoredToken(): string | null {
   const authStorage = localStorage.getItem('auth-storage')
   if (authStorage) {
     try {
       const { state } = JSON.parse(authStorage)
-      if (state?.token) {
-        config.headers.Authorization = `Bearer ${state.token}`
-        return config
-      }
+      return state?.token || null
     } catch {
-      // 忽略解析错误
+      return null
     }
   }
+  return null
+}
+
+// 请求拦截器 - 添加 token
+axiosInstance.interceptors.request.use((config) => {
+  // 优先使用临时设置的 token（登录流程中）
+  if (config.headers.Authorization) {
+    return config
+  }
   
-  // 兼容登录时临时保存的 token
-  const token = localStorage.getItem('token')
+  // 从 zustand persist 读取 token
+  const token = getStoredToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -58,7 +76,7 @@ axiosInstance.interceptors.response.use(
       
       if (!isAuthPage) {
         localStorage.removeItem('auth-storage')
-        localStorage.removeItem('token')
+        setAuthToken(null)
         window.location.href = '/login'
         toast.error('登录已过期，请重新登录')
       }

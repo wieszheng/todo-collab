@@ -14,7 +14,7 @@ export interface Comment {
   } | null
 }
 
-export const commentService = {
+export const commentApi = {
   async listByTask(taskId: string): Promise<Comment[]> {
     const response = await axiosInstance.get(`/comments/task/${taskId}`)
     return response.data

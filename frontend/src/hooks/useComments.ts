@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { commentService } from '../services/commentService'
+import { commentApi } from '../services/commentService'
 
 export function useComments(taskId: string) {
   return useQuery({
     queryKey: ['comments', taskId],
-    queryFn: () => commentService.listByTask(taskId),
+    queryFn: () => commentApi.listByTask(taskId),
     enabled: !!taskId,
   })
 }
@@ -13,7 +13,7 @@ export function useCreateComment(taskId: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (content: string) => commentService.create(taskId, content),
+    mutationFn: (content: string) => commentApi.create(taskId, content),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments', taskId] })
     },
@@ -24,7 +24,7 @@ export function useDeleteComment(taskId: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (commentId: string) => commentService.delete(commentId),
+    mutationFn: (commentId: string) => commentApi.delete(commentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments', taskId] })
     },

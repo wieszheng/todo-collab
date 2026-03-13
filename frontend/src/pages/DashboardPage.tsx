@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { CheckSquare, Clock, AlertCircle, TrendingUp, ListTodo, Calendar, Sun, Moon } from 'lucide-react'
-import { taskService } from '../services/taskService'
+import { taskApi } from '../services/taskService'
 import { useAuthStore } from '../stores/authStore'
 import { Skeleton, StatCardSkeleton } from '../components/Loading'
 import { Task } from '../types'
@@ -10,7 +10,7 @@ export default function DashboardPage() {
   
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => taskService.list(),
+    queryFn: () => taskApi.list(),
   })
 
   const todoCount = tasks.filter((t: Task) => t.status === 'todo').length

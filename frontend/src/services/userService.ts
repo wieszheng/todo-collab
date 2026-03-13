@@ -1,7 +1,7 @@
 import { axiosInstance } from './api'
 import { User } from '../types'
 
-export const userService = {
+export const userApi = {
   async updateMe(data: { nickname?: string; avatar_url?: string }) {
     const response = await axiosInstance.put('/users/me', data)
     return response.data

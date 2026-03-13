@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { authApi } from '../services/authService'
+import { setAuthToken } from '../services/api'
 import { Sparkles, Mail, Lock } from 'lucide-react'
 
 export default function LoginPage() {
@@ -19,13 +20,16 @@ export default function LoginPage() {
 
     try {
       const { access_token } = await authApi.login(email, password)
-      localStorage.setItem('token', access_token)
+      
+      // 临时设置 token，用于 getMe 请求
+      setAuthToken(access_token)
       
       const user = await authApi.getMe()
       setAuth(user, access_token)
       
       navigate('/')
     } catch (err: any) {
+      setAuthToken(null)
       setError(err.response?.data?.detail || '登录失败，请检查邮箱和密码')
     } finally {
       setLoading(false)
